@@ -1,1 +1,7 @@
+# Ambientes virtuais
 venv/
+.venv/
+env/
+
+# Senhas e Variáveis de Ambiente (NUNCA SUBIR)
+.env
