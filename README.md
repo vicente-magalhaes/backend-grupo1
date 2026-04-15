@@ -1,9 +1,9 @@
 # App de conexão aluno <-> instrutor para CNH
 
 ## 📖 Ideia de Negócio
+
 **Resumo:**
 Dado o fim da obrigatoriedade de frequentar a autoescola para se obter a Carteira Nacional de Habilitação, o aplicativo Quero Dirigir surge com o objetivo de flexibilizar, facilitar e diminuir os custos no processo de treinamento para a prova prática do Detran. Sua principal função é conectar instrutores autônomos a pessoas que desejam se preparar para a prova prática com profissionais bem treinados e experientes.
-
 
 **Contexto:**
 A partir da criação da Resolução CONTRAN Nº 1020, acabou-se com a exigência de frequentar Centros de Formação de Condutores (autoescolas) para obter a Carteira de Habilitação Nacional (CNH). Consequentemente, a demanda pelas autoescolas diminui, de modo que os instrutores não necessitam mais do intermédio dessas instituições para conseguir alunos a quem podem ensinar conduta correta no trânsito. A partir disso, enfrentam o impasse de se conectar aos alunos. O nosso objetivo é criar um app de Marketplace (oferecimento de serviços) para conectar instrutores autônomos a pessoas que desejam se preparar para a prova prática com profissionais bem treinados e experientes.
@@ -16,13 +16,16 @@ Como não é mais necessário que o aluno frequente o Centro de Formação de Co
 O software será responsável por conctar os instrutores de aulas práticas com os alunos que desejam tirar sua habilitação de carro ou moto. Para isso, o aluno fará uma busca por instrutores, filtrando por categoria desejada, bairro/região e se necessita de veículo para a aula. Assim, terá acesso a uma lista de instrutores que atendem aos requisitos, podendo acessar detalhes completos dos instrutores, suas agendas e então solicitar aula. O instrutor poderá gerenciar suas aulas pelo próprio app e liberar para o aluno relatórios de aula. 
 
 **Perfil de Usuário:**
-| Aluno (Candidato a Condutor) | Instrutor de Trânsito |
-| :--- | :--- |
-| Busca a obtenção da Carteira Nacional de Habilitação (CNH). | Busca autonomia profissional (desvinculação exclusiva de autoescolas). |
-| Procura alternativas financeiramente mais acessíveis (otimização de custos). | Almeja expandir sua carteira de clientes e alcance de mercado. |
-| Necessita de flexibilidade para o agendamento de aulas práticas. | Deseja maximizar sua margem de lucro por meio de remuneração direta. |
-| Valoriza a personalização do ensino com metodologias adaptadas ao seu perfil. | Exige autonomia e controle total sobre a gestão da própria agenda. |
+
+
+| Aluno (Candidato a Condutor)                                                  | Instrutor de Trânsito                                                                                         |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Busca a obtenção da Carteira Nacional de Habilitação (CNH).                   | Busca autonomia profissional (desvinculação exclusiva de autoescolas).                                        |
+| Procura alternativas financeiramente mais acessíveis (otimização de custos).  | Almeja expandir sua carteira de clientes e alcance de mercado.                                                |
+| Necessita de flexibilidade para o agendamento de aulas práticas.              | Deseja maximizar sua margem de lucro por meio de remuneração direta.                                          |
+| Valoriza a personalização do ensino com metodologias adaptadas ao seu perfil. | Exige autonomia e controle total sobre a gestão da própria agenda.                                            |
 | Valoriza a personalização do ensino com metodologias adaptadas ao seu perfil. | Necessita de uma ferramenta centralizada para gestão de agendamentos e recebimentos (redução de burocracia)." |
+
 
 ---
 
@@ -50,7 +53,7 @@ Abaixo está a visão geral das funcionalidades do sistema. Para visualizar as r
 
 ---
 
-## 💻 Tecnologias Utilizadas
+## 💻 Tecnologias 
 
 A stack principal do projeto foi escolhida visando produtividade, escalabilidade e facilidade de manutenção:
 
@@ -98,9 +101,10 @@ pip install -r requirements.txt
 ```
 
 **5. Configure as variáveis de ambiente:**
-* Crie uma cópia do arquivo `.env.example` na raiz do projeto e renomeie essa cópia para `.env`.
-* Abra o arquivo `.env` e preencha os valores das chaves do Supabase (URL e API Key). 
-* *Nota: Solicite os valores atuais aos Owners do projeto caso ainda não os tenha.*
+
+- Crie uma cópia do arquivo `.env.example` na raiz do projeto e renomeie essa cópia para `.env`.
+- Abra o arquivo `.env` e preencha os valores das chaves do Supabase (URL e API Key). 
+- *Nota: Solicite os valores atuais aos Owners do projeto caso ainda não os tenha.*
 
 ---
 
@@ -147,9 +151,9 @@ Para mantermos a organização do código e evitarmos conflitos, adotamos um flu
 
 Para que o sistema funcione com o banco de dados e outros serviços, utilizamos "chaves" de acesso. Para proteger essas informações, seguimos este padrão:
 
-* **Arquivo `.env` (O Cofre):** Este arquivo guarda as suas chaves reais (API Keys, URLs de Banco). Ele é **estritamente pessoal** e nunca deve ser enviado para o GitHub. O nosso `.gitignore` já está configurado para ignorá-lo.
-* **Arquivo `.env.example` (O Modelo):** Este é um arquivo público que contém apenas os nomes das variáveis necessárias (ex: `SUPABASE_URL=`), mas sem os valores. Ele serve para que novos desenvolvedores saibam o que precisam configurar.
-* **API Keys:** São como senhas de acesso ao Supabase. Trate-as com o mesmo cuidado que trataria a senha do seu e-mail.
+- **Arquivo `.env` (O Cofre):** Este arquivo guarda as suas chaves reais (API Keys, URLs de Banco). Ele é **estritamente pessoal** e nunca deve ser enviado para o GitHub. O nosso `.gitignore` já está configurado para ignorá-lo.
+- **Arquivo `.env.example` (O Modelo):** Este é um arquivo público que contém apenas os nomes das variáveis necessárias (ex: `SUPABASE_URL=`), mas sem os valores. Ele serve para que novos desenvolvedores saibam o que precisam configurar.
+- **API Keys:** São como senhas de acesso ao Supabase. Trate-as com o mesmo cuidado que trataria a senha do seu e-mail.
 
 ---
 

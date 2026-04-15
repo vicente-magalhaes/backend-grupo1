@@ -37,6 +37,21 @@
 - O sistema deve processar a busca e retornar uma lista contendo apenas instrutores com status de perfil "Aprovado" que atendam aos critérios iniciais.
 - Se a busca não retornar resultados, o sistema deve exibir uma mensagem clara (ex: "Nenhum instrutor encontrado com esses critérios na sua região") e sugerir a alteração dos filtros.
 - Na tela de resultados, o aluno deve ter acesso a opções de ordenação e filtros secundários, como: “Continuidade com o instrutor que já deu aulas para o aluno”, “Nota de avaliação (maior para menor)”, “Área geográfica de atuação” e “Quantidade de aulas concluídas”.
+- Na tela de resultados de instrutores disponíveis, exibir apenas aulas com início previsto para, no mínimo, 192 horas (8 dias) após a data da solicitação. O sistema deve calcular e informar ao aluno, na seção “Meus Agendamentos”, os períodos de cancelamento e respectivas porcentagens de reembolso, conforme a política de retenção:
+Cancelamento até 336 horas (14 dias) antes do início da aula → 100% de reembolso  
+Cancelamento entre 168 e 336 horas (7 a 14 dias) → 80% de reembolso  
+Cancelamento entre 24 e 168 horas (1 a 7 dias) → 60% de reembolso  
+Cancelamento até 24 horas antes do início da aula → 40% de reembolso  
+O sistema deve apresentar essas informações de forma automática e contextualizada, considerando a data e hora da solicitação e o prazo máximo de confirmação do instrutor (24 horas). Exemplo:
+Hoje: YYYY‑03‑01 18:00  
+Aula: YYYY‑03‑19 08:00  
+O sistema mostra ao aluno:
+
+“Período de 100%: até YYYY‑03‑05 07:59.
+Período de 80%: YYYY‑03‑05 08:00 até YYYY‑03‑12 07:59.
+Período de 60%: YYYY‑03‑12 08:00 até YYYY‑03‑18 07:59.
+Período de 40%: YYYY‑03‑18 08:00 até início da aula.”
+Na tela de resultados, deve aparecer o preço das aulas de cada instrutor disponível.
 - Cada instrutor na lista de resultados (card) deve exibir um resumo claro contendo: Foto, Nome, Nota média (estrelas), Total de aulas dadas e se possui veículo próprio adaptado.
 - Ao clicar no perfil de um instrutor específico, o aluno deve visualizar os detalhes completos (os anteriores mais descrição do método de ensino e avaliações de alunos). No perfil deve haver um painel interativo de disponibilidade (agenda).
 - O painel de disponibilidade deve exibir apenas os dias e horários que o instrutor previamente configurou como livres, ocultando ou bloqueando horários já reservados por outros alunos.

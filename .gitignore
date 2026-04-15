@@ -5,3 +5,21 @@ env/
 
 # Senhas e Variáveis de Ambiente (NUNCA SUBIR)
 .env
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Pytest
+.pytest_cache/
+
+# Ruff
+.ruff_cache/
+
+# IDE
+.vscode/
+.idea/

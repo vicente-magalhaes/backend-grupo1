@@ -1,0 +1,12 @@
+# SKILL: FastAPI - Monólito Modular (Obrigatório)
+- PROIBIDO colocar lógica de negócio ou acesso a banco dentro de rotas (arquivos em `app/api/`).
+- Estrutura obrigatória:
+  - `app/api/`: APIRouter (Apenas lida com Request/Response HTTP).
+  - `app/schemas/`: Modelos Pydantic (Validação de entrada e saída).
+  - `app/services/`: Regras de negócio puras (Proibido importar `FastAPI` aqui).
+  - `app/repositories/`: Acesso exclusivo ao banco de dados (Supabase).
+  - `app/core/`: Configurações, handlers de erro, dependências de segurança.
+- Tratamento de Erros:
+  - Services devem lançar exceções de domínio (ex: `NotFoundError`, `ConflictError`).
+  - Em `app/core/handlers.py`, um exception handler global captura esses erros e os converte para HTTP Status Codes.
+- O arquivo `main.py` serve apenas para inicializar o app, plugar middlewares e routers.
