@@ -143,7 +143,56 @@ Para mantermos a organização do código e evitarmos conflitos, adotamos um flu
 
 ## 🏗️ Arquitetura e Estrutura de Diretórios
 
-*(A ser preenchido durante o desenvolvimento do projeto)*
+O projeto adota uma estrutura de **Monorepo**, separando claramente o backend do frontend e centralizando a infraestrutura na raiz.
+
+```
+dev-grupo1/
+├── .agent/                        ← guias de contexto para o agente de IA
+│   └── skills/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                 ← pipeline de CI/CD (GitHub Actions)
+├── backend/                       ← serviço de API (Python / FastAPI)
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── v1/                ← endpoints versionados da API
+│   │   │       ├── health.py
+│   │   │       └── router.py
+│   │   ├── core/                  ← configurações, erros e handlers globais
+│   │   │   ├── config.py
+│   │   │   ├── errors.py
+│   │   │   └── handlers.py
+│   │   ├── repositories/          ← camada de acesso a dados (Supabase)
+│   │   │   └── supabase_client.py
+│   │   ├── schemas/               ← modelos Pydantic (contratos de dados)
+│   │   ├── services/              ← lógica de negócio
+│   │   └── main.py                ← ponto de entrada da aplicação FastAPI
+│   ├── tests/                     ← testes automatizados do backend
+│   │   └── __init__.py
+│   ├── .env                       ← variáveis de ambiente locais (gitignored)
+│   ├── .env.example               ← modelo de variáveis necessárias
+│   ├── Dockerfile                 ← imagem Docker do backend
+│   └── requirements.txt           ← dependências Python
+├── frontend/                      ← aplicativo mobile/web (a implementar)
+├── docs/
+│   └── requisitos.md              ← documento completo de requisitos
+├── .gitignore
+├── docker-compose.yml             ← orquestração local dos serviços
+├── README.md
+└── roteiro_ciclo_1.md             ← roteiro e escopo do Ciclo 1
+```
+
+### Camadas do Backend
+
+| Camada | Pasta | Responsabilidade |
+|---|---|---|
+| **Entrypoint** | `app/main.py` | Inicialização do FastAPI e registro de rotas/handlers |
+| **API** | `app/api/v1/` | Definição dos endpoints REST versionados |
+| **Core** | `app/core/` | Configuração de ambiente, tratamento de erros globais |
+| **Services** | `app/services/` | Regras de negócio, orquestração entre camadas |
+| **Repositories** | `app/repositories/` | Acesso ao banco de dados via Supabase |
+| **Schemas** | `app/schemas/` | Validação e serialização de dados com Pydantic |
+| **Tests** | `tests/` | Testes unitários e de integração |
 
 ---
 

@@ -2,9 +2,12 @@
 venv/
 .venv/
 env/
+backend/venv/
+backend/.venv/
 
 # Senhas e Variáveis de Ambiente (NUNCA SUBIR)
 .env
+backend/.env
 
 # Cache do Python
 __pycache__/
