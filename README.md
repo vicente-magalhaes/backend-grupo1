@@ -1,214 +1,310 @@
-# App de conexão aluno <-> instrutor para CNH
+<div align="center">
 
-## 📖 Ideia de Negócio
+# 📊 SellerPulse Analytics
 
-**Resumo:**
-Dado o fim da obrigatoriedade de frequentar a autoescola para se obter a Carteira Nacional de Habilitação, o aplicativo Quero Dirigir surge com o objetivo de flexibilizar, facilitar e diminuir os custos no processo de treinamento para a prova prática do Detran. Sua principal função é conectar instrutores autônomos a pessoas que desejam se preparar para a prova prática com profissionais bem treinados e experientes.
+**Data-driven seller intelligence for modern marketplaces**
 
-**Contexto:**
-A partir da criação da Resolução CONTRAN Nº 1020, acabou-se com a exigência de frequentar Centros de Formação de Condutores (autoescolas) para obter a Carteira de Habilitação Nacional (CNH). Consequentemente, a demanda pelas autoescolas diminui, de modo que os instrutores não necessitam mais do intermédio dessas instituições para conseguir alunos a quem podem ensinar conduta correta no trânsito. A partir disso, enfrentam o impasse de se conectar aos alunos. O nosso objetivo é criar um app de Marketplace (oferecimento de serviços) para conectar instrutores autônomos a pessoas que desejam se preparar para a prova prática com profissionais bem treinados e experientes.
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-red?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**Problema:**
-No método de preparação para a prova prática tradicional, com as autoescolas, há pouca praticidade e altos custos. A disponibilidade de horários oferecida pela autoescola é pouco flexível. Assim, o aluno leva muito mais tempo até o fim do processo, enquanto o instrutor fica subordinado às alocações da autoescola. Além disso, o aluno precisa ir até a autoescola para iniciar a aula, e caso atrase, perde a aula e lida com altos gastos. Pouco desse gasto do aluno é repassado para o instrutor.
-Como não é mais necessário que o aluno frequente o Centro de Formação de Condutores, ele tende a buscar mais flexibilidade e economia. Com isso, surge a dificuldade de acesso a bons profissionais, enquanto estes buscam um meio de obter alunos.
+*Turn raw marketplace orders into actionable sales, margin, and tax insights—without leaving your browser.*
 
-**Função:**
-O software será responsável por conctar os instrutores de aulas práticas com os alunos que desejam tirar sua habilitação de carro ou moto. Para isso, o aluno fará uma busca por instrutores, filtrando por categoria desejada, bairro/região e se necessita de veículo para a aula. Assim, terá acesso a uma lista de instrutores que atendem aos requisitos, podendo acessar detalhes completos dos instrutores, suas agendas e então solicitar aula. O instrutor poderá gerenciar suas aulas pelo próprio app e liberar para o aluno relatórios de aula. 
-
-**Perfil de Usuário:**
-
-
-| Aluno (Candidato a Condutor)                                                  | Instrutor de Trânsito                                                                                         |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Busca a obtenção da Carteira Nacional de Habilitação (CNH).                   | Busca autonomia profissional (desvinculação exclusiva de autoescolas).                                        |
-| Procura alternativas financeiramente mais acessíveis (otimização de custos).  | Almeja expandir sua carteira de clientes e alcance de mercado.                                                |
-| Necessita de flexibilidade para o agendamento de aulas práticas.              | Deseja maximizar sua margem de lucro por meio de remuneração direta.                                          |
-| Valoriza a personalização do ensino com metodologias adaptadas ao seu perfil. | Exige autonomia e controle total sobre a gestão da própria agenda.                                            |
-| Valoriza a personalização do ensino com metodologias adaptadas ao seu perfil. | Necessita de uma ferramenta centralizada para gestão de agendamentos e recebimentos (redução de burocracia)." |
-
+</div>
 
 ---
 
-## 📋 Requisitos
+## 🎯 Project Title and Description
 
-Abaixo está a visão geral das funcionalidades do sistema. Para visualizar as regras de negócio detalhadas e os Critérios de Aceitação completos de cada item, **[consulte o nosso Documento de Requisitos completo](./docs/requisitos.md)**.
+**SellerPulse Analytics** is a marketplace seller management web application that centralizes order data, validates and enriches it through structured pipelines, and presents it through **interactive Streamlit dashboards**. Sellers gain a single place to monitor performance, drill into product-level economics, understand profitability and taxes, and export reports for accounting or planning.
 
+**Value proposition**
 
-| Código    | Nome                                                             | Tipo | Descrição Resumida                                                                                                                 |
-| --------- | ---------------------------------------------------------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **REQ01** | Cadastro de usuário                                              | F    | Permite cadastro de usuários.                                                                                                      |
-| **REQ02** | Solicitação de Perfil de Instrutor                               | F    | Permite que um usuário solicite habilitação como instrutor, informando categorias e enviando documentos para análise.              |
-| **REQ03** | Busca, Seleção e Agendamento de Instrutores                      | F    | Permite ao aluno buscar instrutores por filtros, visualizar perfis/agenda e solicitar aulas em horários disponíveis.               |
-| **REQ04** | Gestão de Solicitações de Aulas pelo Instrutor                   | F    | Notifica o instrutor sobre pedidos de aula e permite aceitar/recusar, atualizando status e agenda.                                 |
-| **REQ05** | Alocação Inteligente e IA (Inovação)                             | F    | Usa IA para sugerir instrutores mais adequados ao aluno com base no histórico e desempenho em tópicos específicos.                 |
-| **REQ06** | Chat Integrado entre Aluno e Instrutor                           | F    | Permite chat entre aluno e instrutor após a solicitação de aula, com notificações e suporte a texto/localização.                   |
-| **REQ07** | Compartilhamento Seguro de Localização                           | F    | Permite compartilhar endereço exato do aluno somente após a confirmação da aula, mantendo privacidade antes disso.                 |
-| **REQ08** | Relatório de Aula                                                | F    | Após cada aula, o instrutor registra avaliação do aluno; dados ficam disponíveis conforme regras de visibilidade e alimentam a IA. |
-| **REQ09** | Pagamento Seguro                                                 | F    | Permite pagamento de aulas no app (cartão/débito/Pix), com comprovante, repasse ao instrutor e regras de reembolso.                |
-| **REQ10** | Escalabilidade e Performance                                     | NF   | Garante escalabilidade e tempo de resposta adequado em picos de acesso, com arquitetura em nuvem.                                  |
-| **REQ11** | Segurança e LGPD (Proteção de Dados)                             | NF   | Protege dados sensíveis e garante conformidade com LGPD por meio de criptografia, anonimização e auditoria.                        |
-| **REQ12** | Manutenibilidade                                                 | NF   | Define arquitetura e modularização para facilitar correções e evoluções (microsserviços e interfaces bem definidas).               |
-| **REQ13** | Integração Contínua e Entrega Contínua (CI/CD) e Observabilidade | NF   | Estabelece CI/CD com testes e deploy automatizados, além de monitoramento e alertas para serviços essenciais.                      |
-
+| Pain point | How SellerPulse helps |
+|------------|------------------------|
+| Orders scattered across portals | Unified import and sync from marketplace APIs or files |
+| Hard to see true profit | Net profit, margins, and fee/tax-aware analytics |
+| Reactive inventory decisions | Pattern-based inventory signals derived from order history |
+| Slow, spreadsheet-heavy workflows | Live dashboards, filters, and one-click exports |
 
 ---
 
-## 💻 Tecnologias 
+## ✅ Functional Requirements
 
-A stack principal do projeto foi escolhida visando produtividade, escalabilidade e facilidade de manutenção:
+### Data import and synchronization
 
-- **Linguagem:** Python
-- **Framework Backend:** FastAPI (para criação ágil dos microsserviços e APIs)
-- **Banco de Dados e Autenticação:** Supabase (PostgreSQL em nuvem)
-- **IDE Recomendada:** Cursor
+- **Multi-source ingestion**: Pull or upload order data from supported marketplaces (REST APIs, webhooks where available, scheduled jobs, or bulk CSV/JSON exports).
+- **Incremental sync**: Track high-water marks (e.g., last modified order time) to avoid duplicate processing and reduce API load.
+- **Schema mapping**: Map marketplace-specific fields to a canonical internal order model (line items, fees, taxes, currency, fulfillment status).
+
+### Data processing and validation
+
+- **Validation rules**: Required fields, numeric ranges, currency consistency, duplicate detection, and referential checks against known products/SKUs.
+- **Normalization**: Currency conversion (with configurable rates), tax jurisdiction normalization, and unit-of-measure alignment.
+- **Enrichment**: Computed fields such as net profit per line, margin %, and allocated marketplace fees.
+
+### Dashboard views
+
+| Area | Capabilities |
+|------|----------------|
+| **Sales performance** | Revenue trends, order volume, AOV, cohort or period comparisons, channel/marketplace splits. |
+| **Product-level analytics** | Top/bottom SKUs, velocity, mix contribution, returns or cancellations if modeled. |
+| **Profitability** | Net profit, gross margin, contribution margin after fees, drill-down by order, product, or time window. |
+| **Tax breakdown** | Tax collected/remitted summaries, jurisdiction views, export-friendly tax tables for compliance handoff. |
+| **Inventory insights** | Demand signals from order frequency and quantity patterns, reorder hints (non-binding), slow-mover highlights. |
+
+### Export and collaboration
+
+- **Exports**: CSV/Excel for filtered datasets; optional PDF summaries for stakeholders.
+- **Saved views** (optional): Named filter presets for recurring reports.
+
+### User management and access control
+
+- **Authentication**: Sign-in integrated with the chosen identity provider (see [Technology Stack](#-technology-stack)).
+- **Authorization**: Role-based access (e.g., owner, analyst, read-only); optional multi-tenant isolation so each seller organization sees only its data.
+
+### Streamlit-specific visualization
+
+- **Interactive widgets**: `st.selectbox`, `st.date_input`, `st.slider` for slicing data without code changes.
+- **Charts**: Native `st.line_chart` / `st.bar_chart` or Plotly/Altair for custom tooltips and legends.
+- **Layout**: `st.columns`, `st.tabs`, and `st.expander` for hierarchical navigation; `st.metric` for KPI cards.
+- **Caching**: `st.cache_data` / `st.cache_resource` for expensive queries and model loads to keep the UI responsive.
 
 ---
 
-## 🚀 Instruções de Instalação (Para novos Desenvolvedores)
+## ⚙️ Non-Functional Requirements
 
-Seja bem-vindo ao time! Para configurar o projeto na sua máquina local, siga o passo a passo abaixo no terminal do Cursor:
+### Performance
 
-**1. Clone o repositório para o seu computador:**
+- **Dashboard response**: Typical filter or date-range changes should render within **~2–5 seconds** for datasets up to the target tier (tune with pagination and aggregates).
+- **Concurrency**: Support **10–50 concurrent Streamlit sessions** at MVP scale; scale out with multiple app replicas behind a load balancer for growth.
+- **Batch processing**: Full daily sync + ETL for a medium seller should complete within an agreed SLA (e.g., **&lt; 30–60 minutes** for millions of rows when using columnar storage and chunked pandas/SQL).
 
-```bash
-git clone [https://github.com/vicente-magalhaes/backend-grupo1.git](https://github.com/vicente-magalhaes/backend-grupo1.git)
-cd backend-grupo1
+### Scalability
+
+- **Volume**: Architecture should scale from thousands to **hundreds of millions** of order lines via partitioning, summary tables, and incremental ETL.
+- **Multi-seller**: Logical or physical tenant isolation; horizontal scaling of workers and app instances.
+
+### Security
+
+- **Encryption**: TLS in transit; encryption at rest for database and object storage (e.g., KMS-managed keys).
+- **Authentication & authorization**: Centralized identity; least-privilege service accounts for ingestion jobs.
+- **Secrets**: No credentials in source control; use environment variables or a secret manager.
+
+### Reliability
+
+- **Data accuracy**: Idempotent ingestion, audit logs for sync runs, reconciliation reports (source vs. warehouse counts).
+- **Backups**: Automated DB backups, retention policy, and tested restore procedures; optional point-in-time recovery for production.
+
+### Usability (Streamlit)
+
+- **Progressive disclosure**: Overview first; details in tabs or expanders.
+- **Consistent theming**: `config.toml` for colors/fonts; clear page titles and help text.
+- **Feedback**: `st.spinner`, `st.toast`, and error banners for failed loads or validation issues.
+
+### Maintainability
+
+- **Structure**: Clear separation of ingestion, domain logic, persistence, and UI (see [Project Structure](#-project-structure)).
+- **Documentation**: README, architecture notes, API field mapping docs, and runbooks for deployments and incident response.
+
+### Data privacy and compliance
+
+- **Marketplace agreements**: Honor API terms, data retention limits, and prohibited use cases defined by each marketplace.
+- **PII minimization**: Store only fields needed for analytics; mask or tokenize buyer PII where possible.
+- **Regulations**: Design with GDPR/CCPA-style requests in mind (export, delete, consent logging) where applicable to your deployment region and customer base.
+
+---
+
+## 🏗️ Solution Architecture
+
+### Backend components
+
+| Layer | Responsibility |
+|-------|------------------|
+| **Data ingestion** | Connectors (API clients, file watchers), rate limiting, retries, raw landing zone (object storage or staging tables). |
+| **Processing / ETL** | Validation, deduplication, normalization, enrichment, loading into curated schemas; orchestrated via cron, Airflow, Dagster, or Prefect (optional). |
+| **API layer (optional)** | REST or internal Python services if multiple clients (Streamlit, mobile, integrations) need the same business logic; otherwise Streamlit can call services directly. |
+| **Database** | **PostgreSQL** for transactional metadata (users, tenants, sync jobs) and relational order headers; **PostgreSQL + TimescaleDB** or a **columnar warehouse** (e.g., DuckDB for embedded analytics, BigQuery/Snowflake at scale) for heavy analytical queries on large fact tables. |
+
+### Frontend structure (Streamlit)
+
+- **Page organization**: `streamlit run app/Home.py` with a `pages/` directory for multi-page apps (`Sales`, `Products`, `Profitability`, `Taxes`, `Inventory`, `Settings`).
+- **Component hierarchy**: Thin pages that compose reusable modules under `src/frontend/components/` (KPI row, filter bar, chart factory, data table).
+- **State management**: Prefer **server-side state** (database + cached query results). Use `st.session_state` for UI-only state (filters, pagination keys); avoid storing large datasets in session state.
+
+### Data flow (high level)
+
+```mermaid
+flowchart LR
+  subgraph Marketplaces["Marketplaces"]
+    M1[API / Webhooks]
+    M2[Bulk exports]
+  end
+
+  subgraph Ingestion["Ingestion layer"]
+    I[Connectors & schedulers]
+    R[Raw storage / staging]
+  end
+
+  subgraph Processing["Processing / ETL"]
+    V[Validate & normalize]
+    E[Enrich metrics]
+    L[Load curated models]
+  end
+
+  subgraph Persistence["Persistence"]
+    DB[(PostgreSQL / warehouse)]
+  end
+
+  subgraph Frontend["Streamlit frontend"]
+    UI[Pages & components]
+  end
+
+  M1 --> I
+  M2 --> I
+  I --> R
+  R --> V
+  V --> E
+  E --> L
+  L --> DB
+  DB --> UI
 ```
 
-**2. Crie o Ambiente Virtual (Isolamento do projeto):**
+1. Marketplaces expose orders via API, webhook, or file export.  
+2. Ingestion pulls data into a **raw/staging** area with provenance (source, batch id, timestamp).  
+3. ETL validates, normalizes, and computes business metrics, then loads **curated** fact and dimension tables.  
+4. Streamlit queries the database (or pre-aggregated views/materialized views) and renders dashboards with caching.
 
-```bash
-python -m venv venv
-```
+### Integration points
 
-**3. Ative o Ambiente Virtual:**
-
-- *No Windows:*
-  ```bash
-  venv\Scripts\activate
-  ```
-- *No Mac/Linux:*
-  ```bash
-  source venv/bin/activate
-  ```
-
-*(Você saberá que deu certo quando aparecer um `(venv)` no início da linha do seu terminal).*
-
-**4. Instale as dependências do projeto:**
-
-```bash
-pip install -r requirements.txt
-```
-
-**5. Configure as variáveis de ambiente:**
-
-- Crie uma cópia do arquivo `.env.example` na raiz do projeto e renomeie essa cópia para `.env`.
-- Abra o arquivo `.env` e preencha os valores das chaves do Supabase (URL e API Key). 
-- *Nota: Solicite os valores atuais aos Owners do projeto caso ainda não os tenha.*
+- **OAuth / API keys** per marketplace; token refresh and scoped permissions.
+- **Webhooks** (where supported) for near-real-time order updates, complemented by **scheduled backfill** for consistency.
+- **Idempotent writes** keyed by marketplace order and line identifiers to handle retries safely.
 
 ---
 
-## 🛠️ Instruções de Uso e Boas Práticas (Git Flow)
+## 🧰 Technology Stack
 
-Para mantermos a organização do código e evitarmos conflitos, adotamos um fluxo de trabalho rigoroso com o Git. **Leia com atenção:**
+| Category | Choices |
+|----------|---------|
+| **Runtime** | Python **3.11+** (3.12 when stable in your environment) |
+| **Web UI** | **Streamlit** 1.28+; optional **streamlit-authenticator** or custom OIDC flow |
+| **Data processing** | **pandas**, **numpy**; optional **polars** for large in-memory transforms |
+| **Validation** | **pandera** or **pydantic** for schemas and pipeline contracts |
+| **Database** | **PostgreSQL** with **SQLAlchemy** 2.x / **asyncpg**; **psycopg** for sync paths |
+| **Migrations** | **Alembic** |
+| **ORM / queries** | SQLAlchemy Core/ORM or raw SQL for performance-critical aggregates |
+| **Charts** | **Plotly** or **Altair**; **streamlit-extras** for enhanced UI patterns |
+| **Auth** | **Auth0**, **Azure AD**, **AWS Cognito**, or **Keycloak** (OIDC); align with `streamlit-authenticator` only for simpler deployments |
+| **Testing** | **pytest**, **pytest-cov**; **httpx** + **respx** for connector tests; optional **Playwright** for E2E if you add a non-Streamlit surface later |
+| **Lint / format** | **ruff**, **black**, **mypy** (strictness as appropriate) |
+| **Deployment** | **Docker** + container orchestration (ECS, Kubernetes, Cloud Run); reverse proxy with TLS; secrets from env or cloud secret manager |
+| **Observability** | Structured logging (**structlog**), OpenTelemetry-compatible traces for ingestion jobs |
 
-### Entendendo as Branches:
+**Streamlit configuration**
 
-- `main`: É a nossa branch de Produção. O código aqui deve estar 100% funcional e finalizado. **NUNCA codifique diretamente na main.**
-- `dev`: É a nossa branch de Integração (Desenvolvimento). É aqui que juntamos o trabalho de todo mundo para testar se tudo funciona em conjunto. **Evite codificar grandes coisas diretamente na dev.**
-- `feature/...`: São as branches de trabalho individual. Cada nova funcionalidade (ex: cadastro, banco de dados) deve ter sua própria branch.
-
-### Sua rotina diária de código:
-
-1. **Sempre ative o venv** ao abrir o Cursor (Passo 3 da instalação).
-2. Vá para a branch de integração e puxe as novidades da equipe:
-  ```bash
-   git checkout dev
-   git pull origin dev
-  ```
-3. Crie a sua branch de trabalho para a tarefa do dia e entre nela:
-  ```bash
-   git checkout -b feature/nome-da-sua-tarefa
-  ```
-4. Escreva seu código e teste localmente usando o servidor (localhost).
-5. Salve seu trabalho (Commits) e envie para a nuvem:
-  ```bash
-   git add .
-   git commit -m "Descrição clara do que foi feito"
-   git push -u origin feature/nome-da-sua-tarefa
-  ```
-6. Quando a funcionalidade estiver pronta e validada, crie um *Pull Request* no GitHub para fundir (merge) a sua `feature` na branch `dev`.
+- `.streamlit/config.toml` for theme, `server.maxUploadSize`, and CORS if needed.  
+- **Secrets** in `.streamlit/secrets.toml` locally (never committed); platform equivalents in production.
 
 ---
 
-## 🏗️ Arquitetura e Estrutura de Diretórios
+## 📁 Project Structure
 
-O projeto adota uma estrutura de **Monorepo**, separando claramente o backend do frontend e centralizando a infraestrutura na raiz.
+Recommended layout for a clean **backend / frontend** split while keeping everything importable as one Python package:
 
-```
-dev-grupo1/
-├── .agent/                        ← guias de contexto para o agente de IA
-│   └── skills/
-├── .github/
-│   └── workflows/
-│       └── ci.yml                 ← pipeline de CI/CD (GitHub Actions)
-├── backend/                       ← serviço de API (Python / FastAPI)
-│   ├── app/
-│   │   ├── api/
-│   │   │   └── v1/                ← endpoints versionados da API
-│   │   │       ├── health.py
-│   │   │       └── router.py
-│   │   ├── core/                  ← configurações, erros e handlers globais
-│   │   │   ├── config.py
-│   │   │   ├── errors.py
-│   │   │   └── handlers.py
-│   │   ├── repositories/          ← camada de acesso a dados (Supabase)
-│   │   │   └── supabase_client.py
-│   │   ├── schemas/               ← modelos Pydantic (contratos de dados)
-│   │   ├── services/              ← lógica de negócio
-│   │   └── main.py                ← ponto de entrada da aplicação FastAPI
-│   ├── tests/                     ← testes automatizados do backend
-│   │   └── __init__.py
-│   ├── .env                       ← variáveis de ambiente locais (gitignored)
-│   ├── .env.example               ← modelo de variáveis necessárias
-│   ├── Dockerfile                 ← imagem Docker do backend
-│   └── requirements.txt           ← dependências Python
-├── frontend/                      ← aplicativo mobile/web (a implementar)
-├── docs/
-│   └── requisitos.md              ← documento completo de requisitos
+```text
+sellerpulse-analytics/
+├── .env.example                 # Document required environment variables
 ├── .gitignore
-├── docker-compose.yml             ← orquestração local dos serviços
+├── .streamlit/
+│   └── config.toml            # Theme, server, and Streamlit options
 ├── README.md
-└── roteiro_ciclo_1.md             ← roteiro e escopo do Ciclo 1
+├── LICENSE
+├── pyproject.toml               # Dependencies and tool config (preferred)
+├── requirements.txt             # Optional lock/pin file for deployments
+├── docker-compose.yml           # Local Postgres + app (optional)
+├── Dockerfile
+│
+├── alembic/                     # DB migrations
+│   ├── env.py
+│   └── versions/
+│
+├── src/
+│   ├── sellerpulse/             # Main Python package
+│   │   ├── __init__.py
+│   │   │
+│   │   ├── config/              # Settings, feature flags
+│   │   │   └── settings.py
+│   │   │
+│   │   ├── domain/              # Business rules (pure Python)
+│   │   │   ├── orders.py
+│   │   │   ├── profitability.py
+│   │   │   └── taxes.py
+│   │   │
+│   │   ├── ingestion/           # Marketplace connectors
+│   │   │   ├── base.py
+│   │   │   └── marketplace_x.py
+│   │   │
+│   │   ├── pipelines/           # ETL steps (validate → transform → load)
+│   │   │   ├── validate.py
+│   │   │   ├── enrich.py
+│   │   │   └── load.py
+│   │   │
+│   │   ├── persistence/         # DB models, repositories, SQL
+│   │   │   ├── models.py
+│   │   │   └── repositories/
+│   │   │
+│   │   ├── services/            # Orchestration used by UI or API
+│   │   │   ├── dashboard_service.py
+│   │   │   └── export_service.py
+│   │   │
+│   │   └── frontend/            # Streamlit-specific helpers (non-page)
+│   │       ├── components/      # Reusable UI building blocks
+│   │       └── charts.py
+│   │
+│   └── streamlit_app/           # Streamlit entrypoint and pages
+│       ├── Home.py              # Landing / overview
+│       └── pages/
+│           ├── 1_Sales.py
+│           ├── 2_Products.py
+│           ├── 3_Profitability.py
+│           ├── 4_Taxes.py
+│           ├── 5_Inventory.py
+│           └── 6_Settings.py
+│
+├── scripts/                     # CLI utilities (sync jobs, one-off backfills)
+│   └── run_sync.py
+│
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── conftest.py
+│
+└── docs/
+    ├── architecture.md
+    └── marketplace_field_mapping.md
 ```
 
-### Camadas do Backend
+**Run locally (illustrative)**
 
-| Camada | Pasta | Responsabilidade |
-|---|---|---|
-| **Entrypoint** | `app/main.py` | Inicialização do FastAPI e registro de rotas/handlers |
-| **API** | `app/api/v1/` | Definição dos endpoints REST versionados |
-| **Core** | `app/core/` | Configuração de ambiente, tratamento de erros globais |
-| **Services** | `app/services/` | Regras de negócio, orquestração entre camadas |
-| **Repositories** | `app/repositories/` | Acesso ao banco de dados via Supabase |
-| **Schemas** | `app/schemas/` | Validação e serialização de dados com Pydantic |
-| **Tests** | `tests/` | Testes unitários e de integração |
+```bash
+python -m venv .venv
+.venv\Scripts\activate          # Windows
+pip install -e ".[dev]"
+streamlit run src/streamlit_app/Home.py
+```
 
 ---
 
-## 🔒 Segurança: Segredos e Autenticações
+## 📜 License
 
-Para que o sistema funcione com o banco de dados e outros serviços, utilizamos "chaves" de acesso. Para proteger essas informações, seguimos este padrão:
-
-- **Arquivo `.env` (O Cofre):** Este arquivo guarda as suas chaves reais (API Keys, URLs de Banco). Ele é **estritamente pessoal** e nunca deve ser enviado para o GitHub. O nosso `.gitignore` já está configurado para ignorá-lo.
-- **Arquivo `.env.example` (O Modelo):** Este é um arquivo público que contém apenas os nomes das variáveis necessárias (ex: `SUPABASE_URL=`), mas sem os valores. Ele serve para que novos desenvolvedores saibam o que precisam configurar.
-- **API Keys:** São como senhas de acesso ao Supabase. Trate-as com o mesmo cuidado que trataria a senha do seu e-mail.
+Specify your license in `LICENSE` (e.g., MIT). Marketplace SDKs and data usage remain subject to **third-party terms**.
 
 ---
 
-## 👥 Owners / Grupo 01
+<div align="center">
 
-- Felipe Jebyeol Lee Yoon (Nº USP: 16865040)
-- Gabriel Baglioni Carvalho Silva (Nº USP: 16866510)
-- Vicente Magalhães Fraga Oliveira (Nº USP: 17098022)
+**SellerPulse Analytics** — *Clarity for every order, margin, and tax line.*
 
+</div>
