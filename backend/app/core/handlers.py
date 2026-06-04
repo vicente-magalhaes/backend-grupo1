@@ -8,7 +8,13 @@ Registrados no app FastAPI via main.py.
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from app.core.errors import ConflictError, ForbiddenError, NotFoundError
+from app.core.errors import (
+    BadRequestError,
+    ConflictError,
+    ForbiddenError,
+    NotFoundError,
+    UnauthorizedError,
+)
 
 
 async def not_found_handler(_request: Request, exc: NotFoundError) -> JSONResponse:
@@ -21,3 +27,11 @@ async def conflict_handler(_request: Request, exc: ConflictError) -> JSONRespons
 
 async def forbidden_handler(_request: Request, exc: ForbiddenError) -> JSONResponse:
     return JSONResponse(status_code=403, content={"detail": exc.detail})
+
+
+async def unauthorized_handler(_request: Request, exc: UnauthorizedError) -> JSONResponse:
+    return JSONResponse(status_code=401, content={"detail": exc.detail})
+
+
+async def bad_request_handler(_request: Request, exc: BadRequestError) -> JSONResponse:
+    return JSONResponse(status_code=400, content={"detail": exc.detail})

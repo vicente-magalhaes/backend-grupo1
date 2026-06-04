@@ -1,0 +1,25 @@
+# ==========================================
+# CNH Connect — Orquestração local (Docker Compose)
+# ==========================================
+# Sobe o serviço de backend (FastAPI). O banco de dados é o PostgreSQL
+# gerenciado pelo Supabase (nuvem) — atende ao REQNF01 (arquitetura em nuvem),
+# por isso não há um contêiner de banco local aqui.
+#
+# A rede interna `cnh-net` permite que serviços futuros (ex.: um frontend web)
+# se comuniquem com a API pelo nome do serviço: http://backend:8000
+
+services:
+  backend:
+    build: ./backend
+    container_name: cnh-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    networks:
+      - cnh-net
+    restart: unless-stopped
+
+networks:
+  cnh-net:
+    driver: bridge

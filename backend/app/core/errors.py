@@ -24,12 +24,28 @@ class NotFoundError(DomainError):
 class ConflictError(DomainError):
     """Conflito de estado ou duplicidade (mapeia para HTTP 409)."""
 
-    def __init__(self, detail: str = "Conflito: o recurso já existe ou está em estado inconsistente"):
+    def __init__(
+        self, detail: str = "Conflito: o recurso já existe ou está em estado inconsistente"
+    ):
         super().__init__(detail)
 
 
 class ForbiddenError(DomainError):
-    """Acesso negado (mapeia para HTTP 403)."""
+    """Acesso negado — autenticado, mas sem permissão (mapeia para HTTP 403)."""
 
     def __init__(self, detail: str = "Acesso negado"):
+        super().__init__(detail)
+
+
+class UnauthorizedError(DomainError):
+    """Falha de autenticação — token ausente/ inválido (mapeia para HTTP 401)."""
+
+    def __init__(self, detail: str = "Não autenticado"):
+        super().__init__(detail)
+
+
+class BadRequestError(DomainError):
+    """Entrada inválida segundo as regras de negócio (mapeia para HTTP 400)."""
+
+    def __init__(self, detail: str = "Requisição inválida"):
         super().__init__(detail)

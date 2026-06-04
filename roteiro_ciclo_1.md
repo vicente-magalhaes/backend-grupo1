@@ -259,44 +259,12 @@ Em resumo, o protótipo busca responder: *“A solução proposta faz sentido pa
 
 ## **4.2.1. Primeiro protótipo de baixa fidelidade**
 
-Antes de se gerar o protótipo de alta fidelidade, foi discutido em grupo como seria a ideia dele por meio dos seguintes esboços, que consistem no primeiro protótipo de baixa fidelidade:
-
-![][image1]![][image2]
+Fizemos - não é necessário como contexto para IA
 
 ## **4.2.2. Segundo protótipo de baixa fidelidade**
 
-Elementos do protótipo de baixa fidelidade foram construídos em forma de **esboços e wireframes**, representados no documento: 
+Fizemos - não é necessário como contexto para IA
 
-* **“PRO3151\_ Prototype \- Initial screen of creating account \+ dashboard screen\_.pdf”**
-
-Principais elementos explorados:
-
-* **Tela inicial e login**:  
-  * Escolha do tipo de usuário: *Candidato à CNH (Aluno)* ou *Instrutor de direção veicular*.  
-  * Campos de login (e-mail e senha) e opção de **“Criar nova conta”**.
-
-  ![][image3]
-
-* **Fluxo de criação de conta do Aluno** (REQ01):  
-  * Campos: nome completo, e-mail, telefone, CPF, senha, endereço do ponto de encontro.
-
-  ![][image4]![][image5]![][image6]
-
-* **Fluxo de criação de conta do Instrutor** (REQ02):  
-  * Campos: nome completo, e-mail, telefone, CNH, credencial oficial, categorias habilitadas, veículo próprio (sim/não), upload de CRLV e foto do veículo, com estado “Em análise”.
-
-  ![][image7]![][image8]![][image9]
-
-  ![][image10]![][image11]![][image12]
-
-  ![][image13]
-
-* **Dashboard de evolução** (REQ05):  
-  * Número de aulas realizadas, aulas faltantes até o mínimo exigido, gráfico de progresso nas competências (baliza, percurso, controle de embreagem), médias numéricas e probabilidade estimada de aprovação.
-
-  ![][image14]
-
-Esse protótipo de baixa fidelidade serviu para **alinhar expectativas visuais e de fluxo** antes da implementação em código.
 
 # **4.3 Protótipo de alta fidelidade ou funcional**
 
@@ -520,15 +488,6 @@ As principais funcionalidades podem ser organizadas em módulos:
   * Uso dos relatórios de aula e avaliações para sugerir instrutores mais adequados.
 
 # **5.3 Próximos passos do projeto** {#5.3-próximos-passos-do-projeto}
-
-**Curto prazo (short-term): 2º protótipo**
-
-* **Refinar o protótipo** com base na terceira coluna da tabela da seção 4.1.1 (“Melhorias identificadas e requisitos a serem refinados”):  
-  * Incluir telas de login e criação de conta inicial (aluno e instrutor) (REQ01 e REQ02).  
-  * Ajustar o chat para se parecer claramente com um chat entre aluno e instrutor, não um chat genérico (REQ06).  
-  * Implementar a seção “Relatórios de aula” para o aluno, que corresponde à lista dos relatórios das aulas realizadas, com cada um tendo a nota de cada uma das três competências (REQ08).  
-  * Completar fluxos de notificações \[solicitação de aula (REQ04), confirmação ou recusa por parte do instrutor ao aluno (REQ04), cancelamento por parte do aluno (REQ04) ou por parte do instrutor quando este recusa ou não responde à solicitação em até 24 horas antes do início da aula solicitada (REQ04), pagamento (REQ09), avaliações (REQ06)\].  
-  * Representar explicitamente as avaliações de 5 estrelas de comportamento (aluno ↔ instrutor) liberadas no chat (REQ06).
 
 **Longo prazo (long-term): implementação das “reações” e NFRs**
 

@@ -1,0 +1,16 @@
+# Ambientes virtuais e caches
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Segredos — NUNCA copiar para a imagem
+.env
+
+# Metadados
+.git/
+.gitignore
+*.md
+tests/

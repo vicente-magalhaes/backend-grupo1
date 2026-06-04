@@ -1,0 +1,45 @@
+# ==========================================
+# CNH Connect — Integração Contínua (REQNF04)
+# Roda lint (ruff) e testes (pytest) a cada push/PR nas branches principais.
+# ==========================================
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  backend-quality:
+    name: Backend — lint & testes
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    # Variáveis dummy: o app carrega settings na importação; em CI não usamos
+    # credenciais reais (nenhum teste acessa o Supabase de verdade).
+    env:
+      SUPABASE_URL: https://dummy.supabase.co
+      SUPABASE_SERVICE_ROLE_KEY: dummy-service-role-key
+      JWT_SECRET: dummy-ci-secret
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Testes (pytest)
+        run: pytest -q
