@@ -50,6 +50,7 @@ export interface InstructorCard {
   avg_rating?: number | null;
   total_lessons: number;
   photo_url?: string | null;
+  teaching_method?: string | null;
 }
 
 export interface SlotOut {
