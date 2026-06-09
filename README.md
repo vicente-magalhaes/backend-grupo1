@@ -31,21 +31,21 @@ O software será responsável por conctar os instrutores de aulas práticas com 
 Abaixo está a visão geral das funcionalidades do sistema. Para visualizar as regras de negócio detalhadas e os Critérios de Aceitação completos de cada item, **[consulte o nosso Documento de Requisitos completo](./docs/requisitos.md)**.
 
 
-| Código    | Nome                                                             | Tipo | Descrição Resumida                                                                                                                 |
-| --------- | ---------------------------------------------------------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **REQ01** | Cadastro de usuário                                              | F    | Permite cadastro de usuários.                                                                                                      |
-| **REQ02** | Solicitação de Perfil de Instrutor                               | F    | Permite que um usuário solicite habilitação como instrutor, informando categorias e enviando documentos para análise.              |
-| **REQ03** | Busca, Seleção e Agendamento de Instrutores                      | F    | Permite ao aluno buscar instrutores por filtros, visualizar perfis/agenda e solicitar aulas em horários disponíveis.               |
-| **REQ04** | Gestão de Solicitações de Aulas pelo Instrutor                   | F    | Notifica o instrutor sobre pedidos de aula e permite aceitar/recusar, atualizando status e agenda.                                 |
-| **REQ05** | Alocação Inteligente e IA (Inovação)                             | F    | Usa IA para sugerir instrutores mais adequados ao aluno com base no histórico e desempenho em tópicos específicos.                 |
-| **REQ06** | Chat Integrado entre Aluno e Instrutor                           | F    | Permite chat entre aluno e instrutor após a solicitação de aula, com notificações e suporte a texto/localização.                   |
-| **REQ07** | Compartilhamento Seguro de Localização                           | F    | Permite compartilhar endereço exato do aluno somente após a confirmação da aula, mantendo privacidade antes disso.                 |
-| **REQ08** | Relatório de Aula                                                | F    | Após cada aula, o instrutor registra avaliação do aluno; dados ficam disponíveis conforme regras de visibilidade e alimentam a IA. |
-| **REQ09** | Pagamento Seguro                                                 | F    | Permite pagamento de aulas no app (cartão/débito/Pix), com comprovante, repasse ao instrutor e regras de reembolso.                |
-| **REQ10** | Escalabilidade e Performance                                     | NF   | Garante escalabilidade e tempo de resposta adequado em picos de acesso, com arquitetura em nuvem.                                  |
-| **REQ11** | Segurança e LGPD (Proteção de Dados)                             | NF   | Protege dados sensíveis e garante conformidade com LGPD por meio de criptografia, anonimização e auditoria.                        |
-| **REQ12** | Manutenibilidade                                                 | NF   | Define arquitetura e modularização para facilitar correções e evoluções (microsserviços e interfaces bem definidas).               |
-| **REQ13** | Integração Contínua e Entrega Contínua (CI/CD) e Observabilidade | NF   | Estabelece CI/CD com testes e deploy automatizados, além de monitoramento e alertas para serviços essenciais.                      |
+| Código      | Nome                                           | Tipo | Descrição Resumida                                                                                                                                 |
+| ----------- | ---------------------------------------------- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **REQ01**   | Cadastro de usuário                            | F    | Cadastro e seção “Meu perfil” do aluno com visualização e edição dos dados pessoais e do ponto de encontro.                                        |
+| **REQ02**   | Solicitação de Perfil de Instrutor             | F    | Cadastro de instrutor com categorias A/B, CNH, credencial e veículo próprio; status “Em Análise”; seção “Meu perfil” editável.                   |
+| **REQ03**   | Busca, Seleção e Agendamento de Instrutores    | F    | Busca por categoria e modalidade de veículo; agenda com antecedência mínima de 8 dias; preço da aula; política de reembolso em “Meus Agendamentos”. |
+| **REQ04**   | Gestão de Solicitações de Aulas pelo Instrutor | F    | Painel de solicitações com aceitar/recusar; pagamento na solicitação; cancelamento automático e reembolso se instrutor não responder em 24 h.      |
+| **REQ05**   | Alocação Inteligente                           | F    | Dashboard de Evolução para aluno e instrutor; atualização de perfis a partir das avaliações no chat (REQ06).                                        |
+| **REQ06**   | Chat Integrado entre Aluno e Instrutor         | F    | Chats por par aluno–instrutor; texto e localização; avaliações de 0 a 5 estrelas após a aula; notificações de mensagens.                         |
+| **REQ07**   | Compartilhamento Seguro de Localização         | F    | Endereço parcial antes da confirmação; pop-up de confirmação do ponto de encontro; endereço completo nas notificações após confirmação.           |
+| **REQ08**   | Relatório de Aula                              | F    | Relatórios por aula com baliza, percurso, embreagem e observações; visibilidade após confirmação da aula pelos próximos instrutores.             |
+| **REQ09**   | Pagamento Seguro                               | F    | Pagamento na solicitação (cartão, débito, Pix); reembolso automático se instrutor não responder em 24 h; reembolsos conforme política do REQ03.    |
+| **REQNF01** | Desempenho                                     | NF   | 95% das requisições simples da API respondem em até 200 ms em ambiente local após aquecimento dos containers.                                     |
+| **REQNF02** | Persistência e integridade                     | NF   | Entidades críticas com PK/FK/check constraints; dados preservados enquanto o volume Docker existir.                                                |
+| **REQNF03** | Isolamento e manutenibilidade                  | NF   | Frontend, backend e banco em containers separados; alterações no frontend não exigem rebuild do banco.                                            |
+| **REQNF04** | Observabilidade                                | NF   | `/health`, logs de containers e healthcheck do PostgreSQL; suporte a Prometheus/Grafana ou alertas CI/CD em produção.                              |
 
 
 ---
