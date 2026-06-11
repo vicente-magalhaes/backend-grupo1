@@ -19,6 +19,24 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Sessão expirada/ inválida (401): limpa o token e avisa o AuthContext para
+// voltar ao Login, em vez de deixar a tela "logada" com as ações falhando.
+let onUnauthorized: (() => void) | null = null;
+export function setUnauthorizedHandler(handler: (() => void) | null): void {
+  onUnauthorized = handler;
+}
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error?.response?.status === 401) {
+      await AsyncStorage.removeItem(TOKEN_KEY);
+      onUnauthorized?.();
+    }
+    return Promise.reject(error);
+  },
+);
+
 /** Extrai a mensagem de erro de domínio retornada pelo backend ({"detail": ...}). */
 export function apiErrorMessage(error: unknown): string {
   const err = error as { response?: { data?: { detail?: string } }; message?: string };

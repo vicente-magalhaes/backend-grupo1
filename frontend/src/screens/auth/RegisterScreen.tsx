@@ -1,11 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
-import { Field, H1, Muted, PrimaryButton, Screen } from '../../components/ui';
-import { theme } from '../../theme';
+import { Button, Muted, Screen, TextField, Toast, Txt } from '../../components';
 
 export function RegisterScreen() {
   const nav = useNavigation<any>();
@@ -37,39 +35,41 @@ export function RegisterScreen() {
 
   return (
     <Screen>
-      <H1>Criar conta de aluno</H1>
+      <Txt variant="title2">Criar conta de aluno</Txt>
       <Muted>Preencha todos os campos para se cadastrar (REQ01).</Muted>
-      <Field label="Nome completo" value={form.full_name} onChangeText={set('full_name')} />
-      <Field
+      <TextField label="Nome completo" value={form.full_name} onChangeText={set('full_name')} icon="person-outline" />
+      <TextField
         label="E-mail"
         value={form.email}
         onChangeText={set('email')}
         autoCapitalize="none"
         keyboardType="email-address"
+        icon="mail-outline"
       />
-      <Field
-        label="Telefone"
-        value={form.phone}
-        onChangeText={set('phone')}
-        keyboardType="phone-pad"
-      />
-      <Field
+      <TextField label="Telefone" value={form.phone} onChangeText={set('phone')} keyboardType="phone-pad" icon="call-outline" />
+      <TextField
         label="CPF (11 dígitos)"
         value={form.cpf}
         onChangeText={set('cpf')}
         keyboardType="number-pad"
+        icon="card-outline"
       />
-      <Field label="Senha (mín. 6)" value={form.password} onChangeText={set('password')} secureTextEntry />
-      <Field
+      <TextField
+        label="Senha (mín. 6)"
+        value={form.password}
+        onChangeText={set('password')}
+        secureToggle
+        icon="lock-closed-outline"
+      />
+      <TextField
         label="Endereço do ponto de encontro"
         value={form.meeting_address}
         onChangeText={set('meeting_address')}
+        icon="location-outline"
       />
-      {error ? <Text style={{ color: theme.colors.danger }}>{error}</Text> : null}
-      <PrimaryButton title="Cadastrar" onPress={onSubmit} loading={loading} />
-      <Pressable onPress={() => nav.goBack()} style={{ marginTop: 8 }}>
-        <Text style={{ color: theme.colors.primary, textAlign: 'center' }}>Já tenho conta</Text>
-      </Pressable>
+      {error ? <Toast message={error} /> : null}
+      <Button title="Cadastrar" onPress={onSubmit} loading={loading} />
+      <Button title="Já tenho conta" variant="ghost" onPress={() => nav.goBack()} />
     </Screen>
   );
 }

@@ -48,14 +48,18 @@ insert into instructor_categories (instructor_id, category_code) values
     ('aaaaaaaa-0000-0000-0000-000000000001', 'B'),
     ('aaaaaaaa-0000-0000-0000-000000000002', 'B');
 
--- Horários disponíveis (futuros — respeitam a regra dos 8 dias do REQ03)
+-- Horários disponíveis (futuros — respeitam a regra dos 8 dias do REQ03).
+-- ATENÇÃO: o now() é avaliado quando este seed roda e fica FIXO. Slots muito
+-- próximos do limite de 8 dias "vencem" com o passar do tempo (param < 192h e
+-- somem da busca). Por isso usamos folga grande (15–22 dias). Para repovoar com
+-- datas sempre frescas em uma demo, rode 0005_seed_extra.sql.
 insert into availability_slots (id, instructor_id, start_at, end_at, status) values
     ('bbbbbbbb-0000-0000-0000-000000000001', 'aaaaaaaa-0000-0000-0000-000000000001',
      now() + interval '10 days', now() + interval '10 days 1 hour', 'reserved'),
     ('bbbbbbbb-0000-0000-0000-000000000002', 'aaaaaaaa-0000-0000-0000-000000000001',
-     now() + interval '12 days', now() + interval '12 days 1 hour', 'free'),
+     now() + interval '15 days', now() + interval '15 days 1 hour', 'free'),
     ('bbbbbbbb-0000-0000-0000-000000000003', 'aaaaaaaa-0000-0000-0000-000000000002',
-     now() + interval '9 days', now() + interval '9 days 1 hour', 'free');
+     now() + interval '18 days', now() + interval '18 days 1 hour', 'free');
 
 -- Uma aula já confirmada (Vicente com João) para alimentar relatórios/IA
 insert into bookings

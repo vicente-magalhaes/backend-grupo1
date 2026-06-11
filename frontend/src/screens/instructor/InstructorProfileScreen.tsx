@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { instructorsApi } from '../../api/endpoints';
 import type { InstructorProfileOut } from '../../api/types';
 import { useAuth } from '../../auth/AuthContext';
 import {
+  Avatar,
+  Button,
   Card,
-  Field,
-  H1,
   Loading,
   Muted,
-  OutlineButton,
-  PrimaryButton,
   Screen,
   StatusBadge,
-} from '../../components/ui';
+  TextField,
+  Toast,
+  Txt,
+} from '../../components';
 import { theme } from '../../theme';
 
 export function InstructorProfileScreen() {
@@ -24,7 +25,7 @@ export function InstructorProfileScreen() {
   const [price, setPrice] = useState('');
   const [region, setRegion] = useState('');
   const [method, setMethod] = useState('');
-  const [msg, setMsg] = useState<string | null>(null);
+  const [msg, setMsg] = useState<{ text: string; tone: 'success' | 'danger' } | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export function InstructorProfileScreen() {
         setRegion(p.region);
         setMethod(p.teaching_method ?? '');
       })
-      .catch((e) => setMsg(apiErrorMessage(e)));
+      .catch((e) => setMsg({ text: apiErrorMessage(e), tone: 'danger' }));
   }, []);
 
   async function save() {
@@ -49,25 +50,31 @@ export function InstructorProfileScreen() {
         teaching_method: method,
       });
       setProfile(updated);
-      setMsg('Perfil atualizado.');
+      setMsg({ text: 'Perfil atualizado.', tone: 'success' });
     } catch (e) {
-      setMsg(apiErrorMessage(e));
+      setMsg({ text: apiErrorMessage(e), tone: 'danger' });
     } finally {
       setSaving(false);
     }
   }
 
-  if (!profile) return <Loading />;
+  if (!profile) return <Loading label="Carregando perfil..." />;
 
   return (
     <Screen>
       <Card>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <H1>{user?.full_name}</H1>
-          <StatusBadge status={profile.status} />
+        <View style={{ flexDirection: 'row', gap: theme.space.md, alignItems: 'center' }}>
+          <Avatar name={user?.full_name} size={56} />
+          <View style={{ flex: 1, gap: 2 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Txt variant="title3">{user?.full_name}</Txt>
+              <StatusBadge status={profile.status} />
+            </View>
+            <Muted>{user?.email}</Muted>
+          </View>
         </View>
         <Muted>
-          {user?.email} · Categorias {profile.categories.join('/')} ·{' '}
+          Categorias {profile.categories.join('/')} ·{' '}
           {profile.provides_vehicle ? 'Veículo próprio' : 'Sem veículo'}
         </Muted>
         {profile.status === 'pending' ? (
@@ -76,14 +83,27 @@ export function InstructorProfileScreen() {
       </Card>
 
       <Card>
-        <Field label="Região de atuação" value={region} onChangeText={setRegion} />
-        <Field label="Preço por aula (R$)" value={price} onChangeText={setPrice} keyboardType="decimal-pad" />
-        <Field label="Método de ensino" value={method} onChangeText={setMethod} multiline />
-        {msg ? <Text style={{ color: theme.colors.primary }}>{msg}</Text> : null}
-        <PrimaryButton title="Salvar alterações" onPress={save} loading={saving} />
+        <Txt variant="headline">Dados do anúncio</Txt>
+        <TextField label="Região de atuação" value={region} onChangeText={setRegion} icon="location-outline" />
+        <TextField
+          label="Preço por aula (R$)"
+          value={price}
+          onChangeText={setPrice}
+          keyboardType="decimal-pad"
+          icon="cash-outline"
+        />
+        <TextField
+          label="Método de ensino"
+          value={method}
+          onChangeText={setMethod}
+          multiline
+          icon="chatbox-ellipses-outline"
+        />
+        {msg ? <Toast message={msg.text} tone={msg.tone} /> : null}
+        <Button title="Salvar alterações" onPress={save} loading={saving} />
       </Card>
 
-      <OutlineButton title="Sair" onPress={logout} tone="danger" />
+      <Button title="Sair" variant="danger-outline" icon="log-out-outline" onPress={logout} />
     </Screen>
   );
 }

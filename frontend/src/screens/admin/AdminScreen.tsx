@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { instructorsApi } from '../../api/endpoints';
 import { useAuth } from '../../auth/AuthContext';
-import { Card, H1, LogoPlaceholder, Muted, OutlineButton, Screen } from '../../components/ui';
+import { Button, Card, Icon, Logo, Muted, Screen, Txt } from '../../components';
+import { theme } from '../../theme';
 
 export function AdminScreen() {
   const { user, logout } = useAuth();
@@ -19,14 +20,19 @@ export function AdminScreen() {
 
   return (
     <Screen>
-      <LogoPlaceholder />
-      <H1>Painel do Administrador</H1>
+      <View style={{ alignItems: 'center', marginTop: theme.space.lg }}>
+        <Logo size={64} showWordmark />
+      </View>
+      <Txt variant="title2">Painel do Administrador</Txt>
       <Muted>Olá, {user?.full_name}.</Muted>
       <Card>
-        <Text>Visão geral do sistema</Text>
+        <View style={{ flexDirection: 'row', gap: theme.space.sm, alignItems: 'center' }}>
+          <Icon name="stats-chart" size={20} color={theme.colors.accent} />
+          <Txt variant="headline">Visão geral do sistema</Txt>
+        </View>
         <Muted>{info}</Muted>
       </Card>
-      <OutlineButton title="Sair" onPress={logout} tone="danger" />
+      <Button title="Sair" variant="danger-outline" icon="log-out-outline" onPress={logout} />
     </Screen>
   );
 }

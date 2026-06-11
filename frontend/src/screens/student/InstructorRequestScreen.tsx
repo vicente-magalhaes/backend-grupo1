@@ -1,10 +1,21 @@
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { instructorsApi } from '../../api/endpoints';
 import { useAuth } from '../../auth/AuthContext';
-import { Card, Field, H1, Muted, PrimaryButton, Screen } from '../../components/ui';
+import {
+  Button,
+  Card,
+  Chip,
+  Icon,
+  Muted,
+  Screen,
+  SegmentedControl,
+  TextField,
+  Toast,
+  Txt,
+} from '../../components';
 import { theme } from '../../theme';
 
 export function InstructorRequestScreen() {
@@ -55,80 +66,78 @@ export function InstructorRequestScreen() {
     return (
       <Screen>
         <Card>
-          <H1>Solicitação enviada ✅</H1>
-          <Muted>
-            Seus documentos estão "Em Análise". Faça login novamente para acessar a área de
-            instrutor.
-          </Muted>
-          <PrimaryButton title="Entrar novamente" onPress={logout} />
+          <View style={{ alignItems: 'center', gap: theme.space.sm, paddingVertical: theme.space.md }}>
+            <Icon name="checkmark-circle" size={56} color={theme.colors.success} />
+            <Txt variant="title2">Solicitação enviada</Txt>
+            <Muted style={{ textAlign: 'center' }}>
+              Seus documentos estão "Em Análise". Faça login novamente para acessar a área de instrutor.
+            </Muted>
+          </View>
+          <Button title="Entrar novamente" onPress={logout} />
         </Card>
       </Screen>
     );
   }
 
   return (
-    <Screen>
-      <H1>Tornar-me instrutor</H1>
+    <Screen footer={<Button title="Enviar solicitação" onPress={submit} loading={loading} />}>
+      <Txt variant="title2">Tornar-me instrutor</Txt>
       <Card>
-        <Text style={styles.label}>Categorias que vai lecionar</Text>
-        <View style={styles.row}>
+        <Muted>Categorias que vai lecionar</Muted>
+        <View style={{ flexDirection: 'row', gap: theme.space.sm }}>
           {['A', 'B'].map((c) => (
-            <Chip key={c} label={`Categoria ${c}`} active={categories.includes(c)} onPress={() => toggleCat(c)} />
+            <Chip key={c} label={`Categoria ${c}`} selected={categories.includes(c)} onPress={() => toggleCat(c)} />
           ))}
         </View>
 
-        <Text style={styles.label}>Fornece veículo próprio?</Text>
-        <View style={styles.row}>
-          <Chip label="Sim" active={providesVehicle} onPress={() => setProvidesVehicle(true)} />
-          <Chip label="Não" active={!providesVehicle} onPress={() => setProvidesVehicle(false)} />
-        </View>
+        <Muted>Fornece veículo próprio?</Muted>
+        <SegmentedControl
+          options={[
+            { label: 'Sim', value: 'yes' },
+            { label: 'Não', value: 'no' },
+          ]}
+          value={providesVehicle ? 'yes' : 'no'}
+          onChange={(v) => setProvidesVehicle(v === 'yes')}
+        />
 
         <Muted>Documentos (identificador/link — upload simulado nesta versão):</Muted>
-        <Field label="CNH" value={form.cnh_url} onChangeText={set('cnh_url')} />
-        <Field label="Credencial oficial" value={form.credential_url} onChangeText={set('credential_url')} />
+        <TextField label="CNH" value={form.cnh_url} onChangeText={set('cnh_url')} icon="document-text-outline" />
+        <TextField
+          label="Credencial oficial"
+          value={form.credential_url}
+          onChangeText={set('credential_url')}
+          icon="ribbon-outline"
+        />
         {providesVehicle ? (
           <>
-            <Field label="CRLV do veículo" value={form.crlv_url} onChangeText={set('crlv_url')} />
-            <Field label="Foto do veículo" value={form.vehicle_photo_url} onChangeText={set('vehicle_photo_url')} />
+            <TextField label="CRLV do veículo" value={form.crlv_url} onChangeText={set('crlv_url')} icon="document-outline" />
+            <TextField
+              label="Foto do veículo"
+              value={form.vehicle_photo_url}
+              onChangeText={set('vehicle_photo_url')}
+              icon="camera-outline"
+            />
           </>
         ) : null}
 
-        <Field label="Região de atuação" value={form.region} onChangeText={set('region')} />
-        <Field
+        <TextField label="Região de atuação" value={form.region} onChangeText={set('region')} icon="location-outline" />
+        <TextField
           label="Preço por aula (R$)"
           value={form.price}
           onChangeText={set('price')}
           keyboardType="decimal-pad"
+          icon="cash-outline"
         />
-        <Field
+        <TextField
           label="Método de ensino"
           value={form.teaching_method}
           onChangeText={set('teaching_method')}
           multiline
+          icon="chatbox-ellipses-outline"
         />
       </Card>
 
-      {error ? <Text style={{ color: theme.colors.danger }}>{error}</Text> : null}
-      <PrimaryButton title="Enviar solicitação" onPress={submit} loading={loading} />
+      {error ? <Toast message={error} /> : null}
     </Screen>
   );
 }
-
-function Chip({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.chip, { backgroundColor: active ? theme.colors.primary : theme.colors.primaryLight }]}
-    >
-      <Text style={{ color: active ? '#fff' : theme.colors.primaryDark, fontWeight: '600', fontSize: 13 }}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
-
-const styles = {
-  label: { fontSize: 13, fontWeight: '600' as const, color: theme.colors.text, marginTop: 4 },
-  row: { flexDirection: 'row' as const, flexWrap: 'wrap' as const, gap: 8 },
-  chip: { borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8 },
-};

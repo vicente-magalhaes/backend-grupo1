@@ -1,3 +1,6 @@
+// gesture-handler DEVE ser importado antes de qualquer outra coisa (contrato da lib).
+import 'react-native-gesture-handler';
+
 import { registerRootComponent } from 'expo';
 
 import App from './App';

@@ -1,12 +1,18 @@
 # ==========================================
 # CNH Connect — Orquestração local (Docker Compose)
 # ==========================================
-# Sobe o serviço de backend (FastAPI). O banco de dados é o PostgreSQL
-# gerenciado pelo Supabase (nuvem) — atende ao REQNF01 (arquitetura em nuvem),
-# por isso não há um contêiner de banco local aqui.
+# `docker compose up --build` sobe a aplicação inteira de forma integrada:
+#   • backend  — API FastAPI (porta 8000)
+#   • frontend — app Expo Web exportado e servido por nginx (porta 3000)
 #
-# A rede interna `cnh-net` permite que serviços futuros (ex.: um frontend web)
-# se comuniquem com a API pelo nome do serviço: http://backend:8000
+# O banco de dados é o PostgreSQL gerenciado pelo Supabase (nuvem) — atende ao
+# REQNF01 (arquitetura em nuvem), por isso não há um contêiner de banco local.
+#
+# A rede interna `cnh-net` liga os serviços: o nginx do frontend repassa as
+# chamadas /api ao backend pelo nome do serviço (http://backend:8000).
+#
+# Para DESENVOLVER telas com hot-reload, rode o Expo no host em paralelo:
+#   cd frontend; $env:NODE_OPTIONS="--use-system-ca"; npx expo start --web
 
 services:
   backend:
@@ -16,6 +22,17 @@ services:
       - "8000:8000"
     env_file:
       - ./backend/.env
+    networks:
+      - cnh-net
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: cnh-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
     networks:
       - cnh-net
     restart: unless-stopped

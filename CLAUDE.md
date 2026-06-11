@@ -37,6 +37,10 @@ em caso de lacuna, **pergunte** antes de codar. (ver `.agent/skills/50-workflow.
   esses valores. Logs referenciam só IDs (`user_id`, `booking_id`). Documentos ficam em bucket privado
   no Supabase Storage; backend gera signed URLs de expiração curta.
 - **Qualidade** (`40-quality-ci.md`): `ruff` para lint/format; `pytest` com foco em `services/`.
+- **Frontend / design** (`60-design-system.md`, `61-ui-usability.md`): visual **Apple-clean + acento
+  azul `#0A63D4`** com usabilidade Uber. Toda UI sai da biblioteca em `frontend/src/components/`
+  (barrel `index.ts`) e dos tokens de `frontend/src/theme.ts` — **proibido** estilo solto/emoji como
+  ícone (usar **Ionicons**), placeholder cinza (usar `Logo`/`Avatar`) ou cor crua (usar tokens).
 
 ## Modelo de dados
 Normalizado até a **3FN** (ver `aula-7-db-resumo.md`): sem arrays (1FN), N:N em tabela de junção

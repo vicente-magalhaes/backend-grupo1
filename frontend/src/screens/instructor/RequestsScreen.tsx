@@ -1,21 +1,22 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { bookingsApi } from '../../api/endpoints';
 import type { BookingOut } from '../../api/types';
 import {
+  Button,
   Card,
   EmptyState,
-  Field,
   Loading,
   Muted,
-  OutlineButton,
-  PrimaryButton,
   Screen,
   StatusBadge,
-} from '../../components/ui';
+  TextField,
+  Toast,
+  Txt,
+} from '../../components';
 import { theme } from '../../theme';
 import { formatDateTime, money } from '../../utils/format';
 
@@ -60,47 +61,55 @@ export function RequestsScreen() {
     }
   }
 
-  if (items === null) return <Loading />;
+  if (items === null) return <Loading label="Carregando solicitações..." />;
 
   return (
     <Screen>
-      {error ? <Muted>{error}</Muted> : null}
-      {items.length === 0 ? <EmptyState text="Nenhuma solicitação no momento." /> : null}
+      {error ? <Toast message={error} tone="info" /> : null}
+      {items.length === 0 ? <EmptyState icon="mail-outline" text="Nenhuma solicitação no momento." /> : null}
       {items.map((b) => (
         <Card key={b.id}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontWeight: '700' }}>{formatDateTime(b.start_at)}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Txt variant="headline">{formatDateTime(b.start_at)}</Txt>
             <StatusBadge status={b.status} />
           </View>
           <Muted>
             {money(b.price)} ·{' '}
             {b.vehicle_modality === 'instructor' ? 'Veículo do instrutor' : 'Veículo do aluno'}
           </Muted>
-          <Muted>
-            Endereço:{' '}
-            {b.meeting_address ?? '(revelado somente após a confirmação — REQ07)'}
-          </Muted>
+          <Muted>Endereço: {b.meeting_address ?? '(revelado somente após a confirmação — REQ07)'}</Muted>
 
           {b.status === 'awaiting_confirmation' ? (
-            <View style={{ gap: 8, marginTop: 4 }}>
-              <View style={{ flexDirection: 'row', gap: 8 }}>
+            <View style={{ gap: theme.space.sm, marginTop: theme.space.xs }}>
+              <View style={{ flexDirection: 'row', gap: theme.space.sm }}>
                 <View style={{ flex: 1 }}>
-                  <PrimaryButton title="Aceitar" onPress={() => accept(b.id)} />
+                  <Button title="Aceitar" icon="checkmark" size="sm" onPress={() => accept(b.id)} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <OutlineButton title="Recusar" onPress={() => setRejectingId(b.id)} tone="danger" />
+                  <Button title="Recusar" variant="danger-outline" size="sm" onPress={() => setRejectingId(b.id)} />
                 </View>
               </View>
               {rejectingId === b.id ? (
-                <View style={{ gap: 8 }}>
-                  <Field label="Motivo da recusa" value={reason} onChangeText={setReason} placeholder="Imprevisto pessoal" />
-                  <OutlineButton title="Confirmar recusa" onPress={() => confirmReject(b.id)} tone="danger" />
+                <View style={{ gap: theme.space.sm }}>
+                  <TextField
+                    label="Motivo da recusa"
+                    value={reason}
+                    onChangeText={setReason}
+                    placeholder="Imprevisto pessoal"
+                  />
+                  <Button title="Confirmar recusa" variant="danger" size="sm" onPress={() => confirmReject(b.id)} />
                 </View>
               ) : null}
             </View>
           ) : null}
 
-          <OutlineButton title="Abrir chat" onPress={() => nav.navigate('Chat', { bookingId: b.id })} />
+          <Button
+            title="Abrir chat"
+            icon="chatbubble-outline"
+            variant="outline"
+            size="sm"
+            onPress={() => nav.navigate('Chat', { bookingId: b.id })}
+          />
         </Card>
       ))}
     </Screen>

@@ -1,28 +1,34 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { reportsApi } from '../../api/endpoints';
 import type { DashboardOut, InstructorSuggestion } from '../../api/types';
-import { Card, EmptyState, H1, Loading, Muted, Screen, Stars } from '../../components/ui';
+import {
+  Avatar,
+  Card,
+  EmptyState,
+  Loading,
+  Muted,
+  ProgressBar,
+  Screen,
+  Stars,
+  Toast,
+  Txt,
+} from '../../components';
 import { theme } from '../../theme';
 
-function Bar({ label, value }: { label: string; value?: number | null }) {
-  const pct = Math.max(0, Math.min(100, ((value ?? 0) / 10) * 100));
+function Metric({ label, value }: { label: string; value?: number | null }) {
   return (
     <View style={{ gap: 4 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: theme.colors.text }}>{label}</Text>
-        <Text style={{ fontWeight: '700', color: theme.colors.primaryDark }}>
+        <Txt variant="subhead">{label}</Txt>
+        <Txt variant="subhead" color={theme.colors.accent}>
           {value?.toFixed(1) ?? '—'}
-        </Text>
+        </Txt>
       </View>
-      <View style={{ height: 10, backgroundColor: theme.colors.primaryLight, borderRadius: 6 }}>
-        <View
-          style={{ height: 10, width: `${pct}%`, backgroundColor: theme.colors.primary, borderRadius: 6 }}
-        />
-      </View>
+      <ProgressBar value={value ?? 0} max={10} />
     </View>
   );
 }
@@ -46,27 +52,32 @@ export function StudentDashboardScreen() {
     }, []),
   );
 
-  if (error) return <Screen><Muted>{error}</Muted></Screen>;
-  if (!data) return <Loading />;
+  if (error)
+    return (
+      <Screen>
+        <Toast message={error} />
+      </Screen>
+    );
+  if (!data) return <Loading label="Carregando evolução..." />;
 
   return (
     <Screen>
       <Card>
-        <H1>Sua evolução</H1>
+        <Txt variant="title3">Sua evolução</Txt>
         {data.aulas_realizadas === 0 ? (
           <Muted>Você ainda não tem relatórios de aula.</Muted>
         ) : (
           <>
-            <Bar label="Baliza" value={data.media_baliza} />
-            <Bar label="Percurso" value={data.media_percurso} />
-            <Bar label="Controle de embreagem" value={data.media_embreagem} />
-            <View style={{ marginTop: 8 }}>
-              <Text style={{ fontSize: 16 }}>
+            <Metric label="Baliza" value={data.media_baliza} />
+            <Metric label="Percurso" value={data.media_percurso} />
+            <Metric label="Controle de embreagem" value={data.media_embreagem} />
+            <View style={{ marginTop: theme.space.sm, gap: 2 }}>
+              <Txt variant="body">
                 Probabilidade estimada de aprovação:{' '}
-                <Text style={{ fontWeight: '800', color: theme.colors.primaryDark }}>
+                <Txt variant="headline" color={theme.colors.accent}>
                   {data.probabilidade_aprovacao}%
-                </Text>
-              </Text>
+                </Txt>
+              </Txt>
               <Muted>Ponto mais crítico: {data.ponto_mais_critico}</Muted>
             </View>
           </>
@@ -77,17 +88,20 @@ export function StudentDashboardScreen() {
         </Muted>
       </Card>
 
-      <Text style={{ fontWeight: '700', fontSize: 16, color: theme.colors.text }}>
-        Sugestões da IA
-      </Text>
+      <Txt variant="title3">Sugestões da IA</Txt>
       {suggestions.length === 0 ? (
-        <EmptyState text="Sem sugestões no momento." />
+        <EmptyState icon="bulb-outline" text="Sem sugestões no momento." />
       ) : (
         suggestions.map((s) => (
           <Card key={s.instructor_id}>
-            <Text style={{ fontWeight: '700' }}>{s.full_name}</Text>
-            <Stars value={s.avg_rating} />
-            <Muted>{s.motivo}</Muted>
+            <View style={{ flexDirection: 'row', gap: theme.space.md, alignItems: 'center' }}>
+              <Avatar name={s.full_name} size={48} />
+              <View style={{ flex: 1, gap: 2 }}>
+                <Txt variant="headline">{s.full_name}</Txt>
+                <Stars value={s.avg_rating} />
+                <Muted>{s.motivo}</Muted>
+              </View>
+            </View>
           </Card>
         ))
       )}

@@ -1,11 +1,23 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { bookingsApi, instructorsApi } from '../../api/endpoints';
 import type { InstructorCard, SlotOut } from '../../api/types';
-import { Card, EmptyState, H1, Loading, Muted, Screen, Stars } from '../../components/ui';
+import {
+  Avatar,
+  Card,
+  EmptyState,
+  Icon,
+  Loading,
+  Muted,
+  Pill,
+  Screen,
+  Stars,
+  Toast,
+  Txt,
+} from '../../components';
 import { theme } from '../../theme';
 import { formatDateTime, money } from '../../utils/format';
 
@@ -35,48 +47,78 @@ export function InstructorDetailScreen() {
     })();
   }, [instructorId]);
 
-  if (loading) return <Loading />;
-  if (error || !card) return <Screen><Text style={{ color: theme.colors.danger }}>{error}</Text></Screen>;
+  if (loading) return <Loading label="Carregando instrutor..." />;
+  if (error || !card)
+    return (
+      <Screen>
+        <Toast message={error ?? 'Não foi possível carregar o instrutor.'} />
+      </Screen>
+    );
 
   return (
     <Screen>
       <Card>
-        <H1>{card.full_name}</H1>
-        <Stars value={card.avg_rating} />
-        <Muted>
-          {card.region} · Categorias {card.categories.join('/')} · {money(card.price)}/aula
-        </Muted>
-        <Muted>
-          {card.total_lessons} aula(s) concluída(s) ·{' '}
-          {card.provides_vehicle ? 'Possui veículo próprio' : 'Não fornece veículo'}
-        </Muted>
-        {card.teaching_method ? <Text style={{ marginTop: 8 }}>{card.teaching_method}</Text> : null}
+        <View style={{ flexDirection: 'row', gap: theme.space.md, alignItems: 'center' }}>
+          <Avatar name={card.full_name} size={64} />
+          <View style={{ flex: 1, gap: 4 }}>
+            <Txt variant="title3">{card.full_name}</Txt>
+            <Stars value={card.avg_rating} />
+            <Muted>
+              {card.region} · Cat. {card.categories.join('/')}
+            </Muted>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', gap: theme.space.sm, flexWrap: 'wrap', marginTop: theme.space.sm }}>
+          <Pill label={`${money(card.price)}/aula`} icon="cash-outline" />
+          <Pill label={`${card.total_lessons} aula(s)`} color={theme.colors.textSecondary} icon="school-outline" />
+          <Pill
+            label={card.provides_vehicle ? 'Veículo próprio' : 'Sem veículo'}
+            color={card.provides_vehicle ? theme.colors.success : theme.colors.textSecondary}
+            icon="car-outline"
+          />
+        </View>
+        {card.teaching_method ? (
+          <Txt variant="body" style={{ marginTop: theme.space.sm }}>
+            {card.teaching_method}
+          </Txt>
+        ) : null}
       </Card>
 
-      <Text style={{ fontWeight: '700', fontSize: 16, color: theme.colors.text }}>
-        Horários disponíveis
-      </Text>
+      <Txt variant="title3">Horários disponíveis</Txt>
       <Muted>Só aparecem aulas com início em pelo menos 8 dias (REQ03).</Muted>
 
       {slots.length === 0 ? (
-        <EmptyState text="Sem horários disponíveis no momento." />
+        <EmptyState icon="calendar-outline" text="Sem horários disponíveis no momento." />
       ) : (
         slots.map((s) => (
-          <Pressable
+          <Card
             key={s.id}
             onPress={() =>
-              nav.navigate('Payment', {
-                slotId: s.id,
-                price: card.price,
-                instructorName: card.full_name,
-              })
+              nav.navigate('Payment', { slotId: s.id, price: card.price, instructorName: card.full_name })
             }
           >
-            <Card style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text>{formatDateTime(s.start_at)}</Text>
-              <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>Solicitar →</Text>
-            </Card>
-          </Pressable>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.space.md }}>
+              <View
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: theme.radii.tile,
+                  backgroundColor: theme.colors.tileBlue,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Icon name="calendar" size={18} color="#fff" />
+              </View>
+              <Txt variant="body" style={{ flex: 1 }}>
+                {formatDateTime(s.start_at)}
+              </Txt>
+              <Txt variant="subhead" color={theme.colors.accent}>
+                Solicitar
+              </Txt>
+              <Icon name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </View>
+          </Card>
         ))
       )}
     </Screen>

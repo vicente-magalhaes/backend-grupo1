@@ -1,26 +1,23 @@
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { bookingsApi, reportsApi } from '../../api/endpoints';
 import type { DashboardOut } from '../../api/types';
-import { Card, EmptyState, H1, Muted, Screen } from '../../components/ui';
+import { Card, Chip, EmptyState, Muted, ProgressBar, Screen, Toast, Txt } from '../../components';
 import { theme } from '../../theme';
 
-function Bar({ label, value }: { label: string; value?: number | null }) {
-  const pct = Math.max(0, Math.min(100, ((value ?? 0) / 10) * 100));
+function Metric({ label, value }: { label: string; value?: number | null }) {
   return (
     <View style={{ gap: 4 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text>{label}</Text>
-        <Text style={{ fontWeight: '700', color: theme.colors.primaryDark }}>
+        <Txt variant="subhead">{label}</Txt>
+        <Txt variant="subhead" color={theme.colors.accent}>
           {value?.toFixed(1) ?? '—'}
-        </Text>
+        </Txt>
       </View>
-      <View style={{ height: 10, backgroundColor: theme.colors.primaryLight, borderRadius: 6 }}>
-        <View style={{ height: 10, width: `${pct}%`, backgroundColor: theme.colors.primary, borderRadius: 6 }} />
-      </View>
+      <ProgressBar value={value ?? 0} max={10} />
     </View>
   );
 }
@@ -62,29 +59,18 @@ export function InstructorDashboardScreen() {
 
   return (
     <Screen>
-      <H1>Evolução dos alunos</H1>
+      <Txt variant="title2">Evolução dos alunos</Txt>
       <Muted>Selecione um aluno com quem você tem aula confirmada (REQ05).</Muted>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.space.sm }}>
         {studentIds.map((id, i) => (
-          <Pressable
-            key={id}
-            onPress={() => loadDashboard(id)}
-            style={{
-              borderRadius: 999,
-              paddingHorizontal: 14,
-              paddingVertical: 8,
-              backgroundColor: selected === id ? theme.colors.primary : theme.colors.primaryLight,
-            }}
-          >
-            <Text style={{ color: selected === id ? '#fff' : theme.colors.primaryDark, fontWeight: '600' }}>
-              Aluno {i + 1}
-            </Text>
-          </Pressable>
+          <Chip key={id} label={`Aluno ${i + 1}`} selected={selected === id} onPress={() => loadDashboard(id)} />
         ))}
       </View>
 
-      {studentIds.length === 0 ? <EmptyState text="Você ainda não tem alunos confirmados." /> : null}
-      {error ? <Muted>{error}</Muted> : null}
+      {studentIds.length === 0 ? (
+        <EmptyState icon="people-outline" text="Você ainda não tem alunos confirmados." />
+      ) : null}
+      {error ? <Toast message={error} /> : null}
 
       {dashboard ? (
         <Card>
@@ -92,16 +78,18 @@ export function InstructorDashboardScreen() {
             <Muted>Este aluno ainda não tem relatórios.</Muted>
           ) : (
             <>
-              <Bar label="Baliza" value={dashboard.media_baliza} />
-              <Bar label="Percurso" value={dashboard.media_percurso} />
-              <Bar label="Controle de embreagem" value={dashboard.media_embreagem} />
-              <Text style={{ marginTop: 8 }}>
-                Probabilidade de aprovação:{' '}
-                <Text style={{ fontWeight: '800', color: theme.colors.primaryDark }}>
-                  {dashboard.probabilidade_aprovacao}%
-                </Text>
-              </Text>
-              <Muted>Ponto mais crítico: {dashboard.ponto_mais_critico}</Muted>
+              <Metric label="Baliza" value={dashboard.media_baliza} />
+              <Metric label="Percurso" value={dashboard.media_percurso} />
+              <Metric label="Controle de embreagem" value={dashboard.media_embreagem} />
+              <View style={{ marginTop: theme.space.sm }}>
+                <Txt variant="body">
+                  Probabilidade de aprovação:{' '}
+                  <Txt variant="headline" color={theme.colors.accent}>
+                    {dashboard.probabilidade_aprovacao}%
+                  </Txt>
+                </Txt>
+                <Muted>Ponto mais crítico: {dashboard.ponto_mais_critico}</Muted>
+              </View>
             </>
           )}
           <Muted>

@@ -1,17 +1,19 @@
 import { useRoute } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { apiErrorMessage } from '../../api/client';
 import { chatApi } from '../../api/endpoints';
 import type { MessageOut } from '../../api/types';
 import { useAuth } from '../../auth/AuthContext';
-import { Muted, OutlineButton } from '../../components/ui';
+import { Button, Icon, Muted, StarPicker, Toast, Txt } from '../../components';
 import { theme } from '../../theme';
 
 export function ChatScreen() {
   const { bookingId } = useRoute<any>().params;
   const { user } = useAuth();
+  const insets = useSafeAreaInsets();
   const [messages, setMessages] = useState<MessageOut[]>([]);
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -56,11 +58,15 @@ export function ChatScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.bg }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: theme.colors.bg }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={90}
+    >
       <ScrollView
         ref={scrollRef}
         style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 12, gap: 8 }}
+        contentContainerStyle={{ padding: theme.space.md, gap: theme.space.sm }}
         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
       >
         {messages.length === 0 ? <Muted>Sem mensagens ainda. Diga olá!</Muted> : null}
@@ -71,77 +77,108 @@ export function ChatScreen() {
               key={m.id}
               style={{
                 alignSelf: mine ? 'flex-end' : 'flex-start',
-                backgroundColor: mine ? theme.colors.primary : theme.colors.card,
-                borderRadius: 12,
-                padding: 10,
                 maxWidth: '80%',
-                borderWidth: mine ? 0 : 1,
-                borderColor: theme.colors.border,
+                backgroundColor: mine ? theme.colors.accent : theme.colors.surface,
+                borderRadius: 18,
+                borderTopRightRadius: mine ? 4 : 18,
+                borderTopLeftRadius: mine ? 18 : 4,
+                paddingHorizontal: 14,
+                paddingVertical: 10,
+                ...theme.shadows.sm,
               }}
             >
-              {m.msg_type === 'location' ? (
-                <Text style={{ color: mine ? '#fff' : theme.colors.text }}>📍 {m.content}</Text>
-              ) : (
-                <Text style={{ color: mine ? '#fff' : theme.colors.text }}>{m.content}</Text>
-              )}
+              <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center' }}>
+                {m.msg_type === 'location' ? (
+                  <Icon name="location" size={14} color={mine ? '#fff' : theme.colors.accent} />
+                ) : null}
+                <Txt variant="body" color={mine ? '#fff' : theme.colors.text}>
+                  {m.content}
+                </Txt>
+              </View>
             </View>
           );
         })}
       </ScrollView>
 
-      {error ? <Text style={{ color: theme.colors.danger, paddingHorizontal: 12 }}>{error}</Text> : null}
+      {error ? (
+        <View style={{ paddingHorizontal: theme.space.md }}>
+          <Toast message={error} />
+        </View>
+      ) : null}
 
       {/* Avaliação 5 estrelas pós-aula (REQ06) */}
       {!rated ? (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 12 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: theme.space.sm,
+            paddingHorizontal: theme.space.md,
+            paddingVertical: theme.space.xs,
+          }}
+        >
           <Muted>Avaliar:</Muted>
-          {[1, 2, 3, 4, 5].map((s) => (
-            <Pressable key={s} onPress={() => setStars(s)}>
-              <Text style={{ fontSize: 22, color: s <= stars ? theme.colors.star : theme.colors.border }}>
-                ★
-              </Text>
-            </Pressable>
-          ))}
-          {stars > 0 ? <OutlineButton title="Enviar nota" onPress={rate} /> : null}
+          <StarPicker value={stars} onChange={setStars} size={24} />
+          {stars > 0 ? <Button title="Enviar" variant="ghost" size="sm" onPress={rate} /> : null}
         </View>
       ) : (
-        <Muted>Avaliação enviada. Obrigado!</Muted>
+        <View style={{ paddingHorizontal: theme.space.md }}>
+          <Muted>Avaliação enviada. Obrigado!</Muted>
+        </View>
       )}
 
-      <View style={{ flexDirection: 'row', gap: 8, padding: 12, alignItems: 'center' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: theme.space.sm,
+          padding: theme.space.md,
+          paddingBottom: theme.space.md + insets.bottom,
+          alignItems: 'center',
+          backgroundColor: theme.colors.surface,
+          borderTopWidth: 1,
+          borderTopColor: theme.colors.separator,
+        }}
+      >
+        <Pressable
+          onPress={() => send('Minha localização compartilhada', 'location')}
+          hitSlop={6}
+          style={{ padding: 4 }}
+        >
+          <Icon name="location-outline" size={24} color={theme.colors.accent} />
+        </Pressable>
         <TextInput
           value={text}
           onChangeText={setText}
           placeholder="Mensagem..."
-          placeholderTextColor={theme.colors.muted}
+          placeholderTextColor={theme.colors.textTertiary}
+          onSubmitEditing={() => send(text)}
           style={{
             flex: 1,
-            borderWidth: 1,
-            borderColor: theme.colors.border,
-            borderRadius: 12,
-            paddingHorizontal: 12,
+            backgroundColor: theme.colors.surfaceSecondary,
+            borderRadius: theme.radii.pill,
+            paddingHorizontal: theme.space.md,
             paddingVertical: 10,
-            backgroundColor: '#fff',
+            fontFamily: theme.fonts.regular,
+            fontSize: 16,
+            color: theme.colors.text,
           }}
         />
         <Pressable
-          onPress={() => send('Minha localização compartilhada', 'location')}
-          style={{ padding: 10 }}
-        >
-          <Text style={{ fontSize: 20 }}>📍</Text>
-        </Pressable>
-        <Pressable
           onPress={() => send(text)}
+          disabled={!text.trim()}
           style={{
-            backgroundColor: theme.colors.primary,
-            borderRadius: 12,
-            paddingHorizontal: 16,
-            paddingVertical: 12,
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            backgroundColor: theme.colors.accent,
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: text.trim() ? 1 : 0.4,
           }}
         >
-          <Text style={{ color: '#fff', fontWeight: '700' }}>Enviar</Text>
+          <Icon name="send" size={18} color="#fff" />
         </Pressable>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-import { TOKEN_KEY } from '../api/client';
+import { setUnauthorizedHandler, TOKEN_KEY } from '../api/client';
 import { authApi, type LoginPayload, type RegisterPayload, usersApi } from '../api/endpoints';
 import type { UserOut } from '../api/types';
 
@@ -29,6 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await AsyncStorage.removeItem(TOKEN_KEY);
     }
   }
+
+  useEffect(() => {
+    // Em qualquer 401 (token expirado/inválido), derruba a sessão → volta ao Login.
+    setUnauthorizedHandler(() => setUser(null));
+    return () => setUnauthorizedHandler(null);
+  }, []);
 
   useEffect(() => {
     (async () => {

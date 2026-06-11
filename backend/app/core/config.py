@@ -35,7 +35,9 @@ class Settings(BaseSettings):
     # ── Segurança / JWT ──────────────────────────────────────
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    # 8h: confortável para uma sessão de dev/demo sem re-login no meio.
+    # Em produção real um valor curto (ex.: 60) + refresh token seria o ideal.
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
 
     # ── Aplicação ────────────────────────────────────────────
     APP_NAME: str = "CNH Connect"

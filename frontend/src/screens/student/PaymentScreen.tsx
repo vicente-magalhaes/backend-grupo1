@@ -1,10 +1,21 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { bookingsApi } from '../../api/endpoints';
-import { Card, Field, H1, Muted, PrimaryButton, Screen } from '../../components/ui';
+import {
+  Button,
+  Card,
+  Icon,
+  ListRow,
+  Muted,
+  Screen,
+  SegmentedControl,
+  TextField,
+  Toast,
+  Txt,
+} from '../../components';
 import { theme } from '../../theme';
 import { money } from '../../utils/format';
 
@@ -49,76 +60,76 @@ export function PaymentScreen() {
     return (
       <Screen>
         <Card>
-          <H1>✅ Comprovante</H1>
-          <Muted>Solicitação enviada e pagamento efetuado.</Muted>
-          <Text>Instrutor: {instructorName}</Text>
-          <Text>Valor: {money(price)}</Text>
-          <Text>Método: {METHODS.find((m) => m.key === method)?.label}</Text>
-          <Muted>
-            Aguardando confirmação do instrutor (até 24h). Se ele não responder, o valor é devolvido.
-          </Muted>
-          <PrimaryButton title="Ver meus agendamentos" onPress={() => nav.navigate('Tabs', { screen: 'Agendamentos' })} />
+          <View style={{ alignItems: 'center', gap: theme.space.sm, paddingVertical: theme.space.md }}>
+            <Icon name="checkmark-circle" size={56} color={theme.colors.success} />
+            <Txt variant="title2">Comprovante</Txt>
+            <Muted>Solicitação enviada e pagamento efetuado.</Muted>
+          </View>
+          <ListRow icon="person" tileColor={theme.colors.tileBlue} title="Instrutor" value={instructorName} />
+          <ListRow icon="cash" tileColor={theme.colors.tileGreen} title="Valor" value={money(price)} />
+          <ListRow
+            icon="card"
+            tileColor={theme.colors.tilePurple}
+            title="Método"
+            value={METHODS.find((m) => m.key === method)?.label}
+            last
+          />
         </Card>
+        <Muted>Aguardando confirmação do instrutor (até 24h). Se ele não responder, o valor é devolvido.</Muted>
+        <Button
+          title="Ver meus agendamentos"
+          onPress={() => nav.navigate('Tabs', { screen: 'Agendamentos' })}
+        />
       </Screen>
     );
   }
 
   return (
-    <Screen>
+    <Screen
+      footer={
+        <Button title={`Confirmar e pagar ${money(price)}`} onPress={confirm} loading={loading} />
+      }
+    >
       <Card>
-        <H1>Pagamento</H1>
-        <Text>Instrutor: {instructorName}</Text>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.colors.primaryDark }}>
+        <Muted>Você está pagando</Muted>
+        <Txt variant="largeTitle" color={theme.colors.accent}>
           {money(price)}
-        </Text>
+        </Txt>
+        <Muted>Instrutor: {instructorName}</Muted>
       </Card>
 
       <Card>
-        <Text style={styles.label}>Modalidade do veículo</Text>
-        <View style={styles.row}>
-          <Chip label="Veículo do instrutor" active={modality === 'instructor'} onPress={() => setModality('instructor')} />
-          <Chip label="Meu veículo" active={modality === 'own'} onPress={() => setModality('own')} />
-        </View>
-
-        <Text style={styles.label}>Forma de pagamento</Text>
-        <View style={styles.row}>
-          {METHODS.map((m) => (
-            <Chip key={m.key} label={m.label} active={method === m.key} onPress={() => setMethod(m.key)} />
-          ))}
-        </View>
-
-        <Text style={styles.label}>Ponto de encontro (REQ07)</Text>
-        <View style={styles.row}>
-          <Chip label="Usar endereço do cadastro" active={keepAddress} onPress={() => setKeepAddress(true)} />
-          <Chip label="Informar outro" active={!keepAddress} onPress={() => setKeepAddress(false)} />
-        </View>
+        <Muted>Modalidade do veículo</Muted>
+        <SegmentedControl
+          options={[
+            { label: 'Veículo do instrutor', value: 'instructor' },
+            { label: 'Meu veículo', value: 'own' },
+          ]}
+          value={modality}
+          onChange={setModality}
+        />
+        <Muted>Forma de pagamento</Muted>
+        <SegmentedControl
+          options={METHODS.map((m) => ({ label: m.label, value: m.key }))}
+          value={method}
+          onChange={setMethod}
+        />
+        <Muted>Ponto de encontro (REQ07)</Muted>
+        <SegmentedControl
+          options={[
+            { label: 'Endereço do cadastro', value: 'keep' },
+            { label: 'Informar outro', value: 'other' },
+          ]}
+          value={keepAddress ? 'keep' : 'other'}
+          onChange={(v) => setKeepAddress(v === 'keep')}
+        />
         {!keepAddress ? (
-          <Field label="Novo endereço" value={newAddress} onChangeText={setNewAddress} />
+          <TextField label="Novo endereço" value={newAddress} onChangeText={setNewAddress} icon="location-outline" />
         ) : null}
       </Card>
 
       <Muted>O pagamento (simulado) é confirmado já na solicitação (REQ09).</Muted>
-      {error ? <Text style={{ color: theme.colors.danger }}>{error}</Text> : null}
-      <PrimaryButton title={`Confirmar e pagar ${money(price)}`} onPress={confirm} loading={loading} />
+      {error ? <Toast message={error} /> : null}
     </Screen>
   );
 }
-
-function Chip({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.chip, { backgroundColor: active ? theme.colors.primary : theme.colors.primaryLight }]}
-    >
-      <Text style={{ color: active ? '#fff' : theme.colors.primaryDark, fontWeight: '600', fontSize: 13 }}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
-
-const styles = {
-  label: { fontSize: 13, fontWeight: '600' as const, color: theme.colors.text, marginTop: 4 },
-  row: { flexDirection: 'row' as const, flexWrap: 'wrap' as const, gap: 8 },
-  chip: { borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8 },
-};

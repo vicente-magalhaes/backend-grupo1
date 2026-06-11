@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { apiErrorMessage } from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
-import { Field, H1, LogoPlaceholder, Muted, PrimaryButton, Screen } from '../../components/ui';
+import { Button, Logo, Muted, Screen, TextField, Toast, Txt } from '../../components';
 import { theme } from '../../theme';
 
 export function LoginScreen() {
@@ -29,33 +29,32 @@ export function LoginScreen() {
 
   return (
     <Screen>
-      <View style={{ marginTop: 24 }}>
-        <LogoPlaceholder />
+      <View style={{ alignItems: 'center', marginTop: theme.space.xxl, marginBottom: theme.space.md }}>
+        <Logo size={84} showWordmark />
+        <Muted style={{ marginTop: 6 }}>Instrutores de direção, na palma da mão</Muted>
       </View>
-      <H1>Entrar</H1>
-      <Field
+      <Txt variant="title2">Entrar</Txt>
+      <TextField
         label="E-mail"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
         placeholder="voce@email.com"
+        icon="mail-outline"
       />
-      <Field
+      <TextField
         label="Senha"
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
+        secureToggle
         placeholder="••••••"
+        icon="lock-closed-outline"
       />
-      {error ? <Text style={{ color: theme.colors.danger }}>{error}</Text> : null}
-      <PrimaryButton title="Entrar" onPress={onSubmit} loading={loading} />
-      <Pressable onPress={() => nav.navigate('Register')} style={{ marginTop: 8 }}>
-        <Text style={{ color: theme.colors.primary, textAlign: 'center' }}>
-          Não tem conta? Cadastre-se
-        </Text>
-      </Pressable>
-      <View style={{ marginTop: 24 }}>
+      {error ? <Toast message={error} /> : null}
+      <Button title="Entrar" onPress={onSubmit} loading={loading} />
+      <Button title="Não tem conta? Cadastre-se" variant="ghost" onPress={() => nav.navigate('Register')} />
+      <View style={{ marginTop: theme.space.lg, gap: 2 }}>
         <Muted>Demo (senha: senha123):</Muted>
         <Muted>aluno → vicente@aluno.com</Muted>
         <Muted>instrutor → joao@instrutor.com</Muted>
